@@ -1,5 +1,11 @@
 # Cursor Integration
 
+## Sub-agent spawning
+Cursor Composer can handle multi-file reads efficiently.
+For large foundations, consider chunked reading or ask user to specify focus area.
+
+## .cursorrules snippet
+
 Add this to `.cursor/rules` or `.cursorrules`:
 
 ```

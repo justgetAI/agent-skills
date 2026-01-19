@@ -1,5 +1,17 @@
 # Generic Integration
 
+## Sub-agent spawning
+If your agent supports sub-tasks or background workers:
+- Spawn a "context loader" to read foundation + active spec
+- Have it return a condensed summary
+- Main agent receives summary without full file contents
+
+If no sub-agent support:
+- Read foundation files sequentially
+- Summarize in working memory before proceeding
+
+## System prompt snippet
+
 For agents without native skill support, include this in your system prompt:
 
 ---

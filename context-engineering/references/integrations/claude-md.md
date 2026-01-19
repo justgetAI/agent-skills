@@ -1,5 +1,18 @@
 # Claude Code Integration
 
+## Sub-agent spawning
+Claude Code supports spawning sub-agents via background tasks or tool calls.
+Use this to load context without bloating main agent:
+
+```
+Spawn context loader:
+- Task: "Read and summarize context/ for {spec-name}"
+- Returns condensed summary
+- Main agent stays lean
+```
+
+## CLAUDE.md snippet
+
 Add this to your `CLAUDE.md`:
 
 ```markdown
