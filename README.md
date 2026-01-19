@@ -12,19 +12,24 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 
 ## Installation
 
-### Option 1: npx (if supported by your agent)
+### Option 1: npx add-skill
 ```bash
-npx add-skill justgetAI/agent-skills/context-engineering
+npx add-skill justgetAI/agent-skills --skill context-engineering
 ```
 
-### Option 2: Clone and copy
+### Option 2: Manual (global)
 ```bash
-git clone https://github.com/justgetAI/agent-skills.git
-cp -r agent-skills/context-engineering /path/to/your/project/.skills/
+git clone https://github.com/justgetAI/agent-skills.git /tmp/agent-skills
+mkdir -p ~/.claude/skills
+cp -r /tmp/agent-skills/context-engineering ~/.claude/skills/
 ```
 
-### Option 3: Reference directly
-Add skill path to your agent config (CLAUDE.md, .cursorrules, etc.)
+### Option 3: Manual (per-project)
+```bash
+git clone https://github.com/justgetAI/agent-skills.git /tmp/agent-skills
+mkdir -p .claude/skills
+cp -r /tmp/agent-skills/context-engineering .claude/skills/
+```
 
 ## Skill Structure
 
