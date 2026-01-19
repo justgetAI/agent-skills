@@ -2,6 +2,10 @@
 # Context Engineering - Init Script
 # Creates context/ directory structure in current project
 #
+# Portability: POSIX-compliant, tested on Linux. Uses only:
+#   mkdir, touch, echo, cd, dirname, set -e
+# Should work on macOS, Ubuntu, Git Bash (Windows)
+#
 # Usage:
 #   ./init.sh              # minimal structure
 #   ./init.sh --with-examples  # include example files (feat003)
