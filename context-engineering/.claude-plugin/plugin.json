@@ -1,0 +1,12 @@
+{
+  "name": "context-engineering",
+  "description": "Human-readable context management for specs, tasks, and foundations",
+  "version": "1.0.0",
+  "author": {
+    "name": "justgetAI"
+  },
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT",
+  "keywords": ["context", "specs", "tasks", "project-management", "workflow"]
+}

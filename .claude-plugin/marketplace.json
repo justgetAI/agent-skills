@@ -1,0 +1,21 @@
+{
+  "name": "justgetai-tools",
+  "owner": {
+    "name": "justgetAI",
+    "email": "hello@justget.ai"
+  },
+  "metadata": {
+    "description": "AI coding agent tools by justgetAI",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "context-engineering",
+      "source": "./context-engineering",
+      "description": "Human-readable context management for specs, tasks, and foundations",
+      "version": "1.0.0",
+      "category": "workflow",
+      "tags": ["context", "specs", "tasks", "project-management"]
+    }
+  ]
+}
