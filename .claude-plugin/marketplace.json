@@ -18,12 +18,12 @@
       "tags": ["context", "specs", "tasks", "project-management"]
     },
     {
-      "name": "wide-events",
-      "source": "./wide-events",
-      "description": "Implement wide events (canonical log lines) for effective debugging",
+      "name": "logging-standards",
+      "source": "./logging-standards",
+      "description": "Our standard approach to logging. One event per request with full context.",
       "version": "1.0.0",
       "category": "observability",
-      "tags": ["logging", "debugging", "observability", "wide-events"]
+      "tags": ["logging", "debugging", "observability", "standards"]
     }
   ]
 }

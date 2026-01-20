@@ -1,10 +1,10 @@
 ---
-name: wide-events
-description: Implement wide events (canonical log lines) for effective debugging. One comprehensive event per request with full business context, not scattered log statements.
+name: logging-standards
+description: Our standard approach to logging. One event per request with full business context. No scattered log statements.
 compatibility: Any backend framework (Hono, Express, Fastify, etc.)
 ---
 
-# Wide Events
+# Logging Standards
 
 One event per request. Full context. No more grep-ing.
 
