@@ -30,6 +30,7 @@ show_help() {
     echo "  ctx new task <spec> <name>     Create new task (e.g., ctx new task feat001 setup)"
     echo "  ctx list specs                 List all specs"
     echo "  ctx list tasks [spec]          List tasks (optionally filter by spec)"
+    echo "  ctx feedback <spec> <1-5> [issue]  Rate completed spec, auto-creates improve if ≤3"
     echo "  ctx help                       Show this help"
     echo ""
     echo "Examples:"
@@ -37,6 +38,7 @@ show_help() {
     echo "  ctx new task feat001 stripe-integration"
     echo "  ctx list specs"
     echo "  ctx list tasks feat001"
+    echo "  ctx feedback feat001 2 too-verbose"
 }
 
 # Get next spec number for a type
@@ -179,6 +181,84 @@ cmd_list_tasks() {
     done
 }
 
+cmd_feedback() {
+    spec="$1"
+    rating="$2"
+    issue="$3"
+    
+    if [ -z "$spec" ] || [ -z "$rating" ]; then
+        echo "Error: Usage: ctx feedback <spec> <1-5> [issue-slug]"
+        echo "Example: ctx feedback feat001 2 too-verbose"
+        exit 1
+    fi
+    
+    # Validate rating
+    case "$rating" in
+        1|2|3|4|5) ;;
+        *)
+            echo "Error: Rating must be 1-5"
+            exit 1
+            ;;
+    esac
+    
+    # Find spec file
+    specfile=$(ls "$CONTEXT_DIR/specs/${spec}-"*.md 2>/dev/null | head -1)
+    if [ -z "$specfile" ]; then
+        echo "Error: No spec found matching '$spec'"
+        exit 1
+    fi
+    
+    # Update spec with feedback
+    if grep -q "^Rating:" "$specfile" 2>/dev/null; then
+        # Update existing rating
+        sed -i "s/^Rating:.*/Rating: $rating/" "$specfile"
+    else
+        # Append feedback section if not present
+        if ! grep -q "^## Feedback" "$specfile" 2>/dev/null; then
+            echo "" >> "$specfile"
+            echo "## Feedback" >> "$specfile"
+            echo "Rating: $rating" >> "$specfile"
+            echo "Issue: ${issue:-none}" >> "$specfile"
+        else
+            sed -i "s/^Rating:.*/Rating: $rating/" "$specfile"
+        fi
+    fi
+    
+    # Update issue line
+    if [ -n "$issue" ]; then
+        sed -i "s/^Issue:.*/Issue: $issue/" "$specfile"
+    fi
+    
+    echo "Updated $specfile with rating $rating"
+    
+    # Auto-create improve spec if rating <= 3 and issue provided
+    if [ "$rating" -le 3 ] && [ -n "$issue" ]; then
+        num=$(next_spec_num "improve")
+        filename="improve${num}-${issue}.md"
+        filepath="$CONTEXT_DIR/specs/$filename"
+        
+        cat > "$filepath" << ENDOFIMPROVE
+# improve${num}: ${issue}
+
+Linear: N/A
+Source: ${spec}
+
+## Problem
+Feedback from ${spec}: rating $rating/5
+Issue: ${issue}
+
+## Tasks
+- [ ] task001: analyze-root-cause
+- [ ] task002: implement-fix
+
+## Notes
+Auto-generated from feedback on ${spec}
+ENDOFIMPROVE
+        
+        echo "Created $filepath (auto-generated from low rating)"
+    fi
+}
+
 # Main command routing
 case "$1" in
     new)
@@ -195,6 +275,10 @@ case "$1" in
             tasks) cmd_list_tasks "$3" ;;
             *) echo "Error: ctx list <specs|tasks>"; exit 1 ;;
         esac
+        ;;
+    feedback)
+        check_context
+        cmd_feedback "$2" "$3" "$4"
         ;;
     help|--help|-h)
         show_help

@@ -10,3 +10,7 @@ Linear: {link or N/A}
 
 ## Notes
 {optional}
+
+## Feedback
+Rating: {1-5}
+Issue: {what could be better — blank if rating > 3}

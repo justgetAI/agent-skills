@@ -109,6 +109,36 @@ See [foundation-guidelines.md](references/foundation-guidelines.md)
 
 ---
 
+## Self-Improvement Loop
+
+Rate completed specs to drive system improvement.
+
+### Feedback command
+```
+ctx feedback <spec> <1-5> [issue-slug]
+```
+
+### Rating guide
+- 5: perfect
+- 4: good, minor friction
+- 3: acceptable, notable issues
+- 2: poor, needs improvement  
+- 1: failed
+
+### Auto-improvement
+When rating ≤ 3 with issue:
+1. Updates spec's `## Feedback` section
+2. Auto-creates `improve{###}-{issue}.md`
+3. Links back to source spec
+
+### Common issues
+- `too-verbose` — sacrifice grammar for conciseness
+- `wrong-format` — templates need adjustment
+- `missed-context` — loading protocol gaps
+- `unclear-instructions` — SKILL.md needs clarity
+
+---
+
 ## Templates
 
 - [spec-template.md](references/spec-template.md)
