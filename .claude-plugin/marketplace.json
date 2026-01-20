@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "AI coding agent tools by justgetAI",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -16,6 +16,14 @@
       "version": "1.0.0",
       "category": "workflow",
       "tags": ["context", "specs", "tasks", "project-management"]
+    },
+    {
+      "name": "wide-events",
+      "source": "./wide-events",
+      "description": "Implement wide events (canonical log lines) for effective debugging",
+      "version": "1.0.0",
+      "category": "observability",
+      "tags": ["logging", "debugging", "observability", "wide-events"]
     }
   ]
 }

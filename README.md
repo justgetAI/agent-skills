@@ -9,6 +9,7 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 | Skill | Description |
 |-------|-------------|
 | [context-engineering](./context-engineering/) | Human-readable context management for specs, tasks, and foundations |
+| [wide-events](./wide-events/) | Implement wide events (canonical log lines) for effective debugging |
 
 ## Installation
 

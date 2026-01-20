@@ -1,0 +1,10 @@
+{
+  "name": "wide-events",
+  "description": "Implement wide events (canonical log lines) for effective debugging. One event per request with full context.",
+  "version": "1.0.0",
+  "author": {
+    "name": "justgetAI"
+  },
+  "license": "MIT",
+  "keywords": ["logging", "observability", "debugging", "wide-events", "canonical-log-lines"]
+}
