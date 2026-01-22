@@ -5,8 +5,10 @@
 ## The Planning Flow
 
 ```
-Idea → Refinement → Research → Spec Draft → Review → Approved Spec
+Idea → Refinement → Research → Options → Decision → Spec Draft → Review → Approved Spec
 ```
+
+**80% planning, 20% execution.** The options research closes the loop upfront.
 
 ### Phase 1: Idea Refinement
 
@@ -53,17 +55,56 @@ Based on findings, decide if external research is needed:
 | High risk/complexity | Deep research before proceeding |
 | Security/compliance implications | Mandatory security research |
 
-### Phase 4: External Research (Conditional)
+### Phase 4: Options Research (Recommended)
 
-If needed:
+Before committing to an approach, research how others solve it:
 
-```bash
-# Framework docs
-mgrep "how to [pattern] in [framework]"
+Run [options-researcher](../agents/options-researcher.md):
 
-# Best practices
-nia_web_search "[pattern] best practices [year]"
 ```
+┌─────────────────────────────────────────────┐
+│            Options Researcher               │
+├─────────────────────────────────────────────┤
+│ 1. Identify enterprise companies in space   │
+│ 2. Identify open-source solutions           │
+│ 3. Research their approaches                │
+│ 4. Present 2-4 options with trade-offs      │
+└─────────────────────────────────────────────┘
+                    ↓
+        ┌─────────────────────┐
+        │  Option A: Stripe   │
+        │  Option B: Square   │
+        │  Option C: Simple   │
+        └─────────────────────┘
+                    ↓
+        User picks approach with
+        full context of trade-offs
+```
+
+**Example output:**
+```markdown
+## Options: Payment State Handling
+
+### Option A: Event Sourcing (Stripe's approach)
+- Used by: Stripe, Adyen
+- Pros: Full audit trail, time-travel debugging
+- Cons: Complex, learning curve
+- Best when: Need complete history, regulatory requirements
+
+### Option B: State Machine + Audit Log (Square's approach)
+- Used by: Square, most fintech
+- Pros: Simpler, familiar pattern
+- Cons: Audit log separate from state
+- Best when: Moderate scale, team knows state machines
+
+### Option C: Status Field + History Table
+- Used by: Most startups
+- Pros: Dead simple, fast to build
+- Cons: No formal transitions, easy to corrupt
+- Best when: MVP, low scale, need speed
+```
+
+This **closes the loop** — user makes informed decision before spec is written.
 
 ### Phase 5: Spec Creation
 

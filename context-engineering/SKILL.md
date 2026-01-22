@@ -40,6 +40,7 @@ Run `scripts/init.sh` to scaffold.
 |-------|---------|
 | [repo-researcher](agents/repo-researcher.md) | Research codebase patterns and conventions |
 | [learnings-researcher](agents/learnings-researcher.md) | Surface past learnings and anti-patterns |
+| [options-researcher](agents/options-researcher.md) | Research enterprise/OSS approaches, present options |
 | [spec-reviewer](agents/spec-reviewer.md) | Review specs for clarity and completeness |
 | [simplicity-reviewer](agents/simplicity-reviewer.md) | Challenge complexity, find simpler solutions |
 
@@ -49,7 +50,7 @@ Run `scripts/init.sh` to scaffold.
 
 ### Planning Flow (80% planning, 20% execution)
 ```
-Idea → Refinement → Research → Spec Draft → Review → Approved Spec
+Idea → Refinement → Research → Options → Decision → Spec Draft → Review → Approved
 ```
 
 ### Naming
