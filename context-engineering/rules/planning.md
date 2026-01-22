@@ -144,18 +144,29 @@ planning:
 - [Risk 1]: [mitigation]
 ```
 
-### Phase 6: Review
+### Phase 6: Review (Parallel)
 
-Before marking spec as ready:
+Before marking spec as ready, **spawn both reviewers in parallel**:
 
 ```
 ┌─────────────────┐     ┌─────────────────┐
 │  spec-reviewer  │     │simplicity-reviewer│
+│   (sub-agent)   │     │   (sub-agent)    │
 └────────┬────────┘     └────────┬────────┘
-         │                       │
+         │    PARALLEL           │
          └───────────┬───────────┘
                      ▼
+           [Merge feedback]
+                     ▼
            [Approved or Revise]
+```
+
+**How to spawn parallel sub-agents:**
+```
+Spawn sub-agent 1: "Run spec-reviewer on [spec file]. Return verdict."
+Spawn sub-agent 2: "Run simplicity-reviewer on [spec file]. Return verdict."
+Wait for both.
+Merge results.
 ```
 
 Both must pass for spec to be approved.

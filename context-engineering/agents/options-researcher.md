@@ -34,22 +34,39 @@ Think: What OSS projects tackle this problem?
 - Well-documented solutions
 ```
 
-### 2. Research Their Approaches
+### 2. Research Their Approaches (Parallel Sub-Agents)
+
+**Spawn parallel sub-agents** for faster research:
+
+```
+┌──────────────────────┐     ┌──────────────────────┐
+│ Enterprise Researcher│     │   OSS Researcher     │
+│     (sub-agent)      │     │    (sub-agent)       │
+├──────────────────────┤     ├──────────────────────┤
+│ Research:            │     │ Research:            │
+│ • Stripe             │     │ • GitHub top repos   │
+│ • Square             │     │ • Popular libraries  │
+│ • Industry leaders   │     │ • Reference impls    │
+└──────────┬───────────┘     └──────────┬───────────┘
+           │        PARALLEL            │
+           └────────────┬───────────────┘
+                        ▼
+               [Merge into options]
+```
+
+**Sub-agent prompts:**
+```
+Enterprise: "Research how enterprise companies (Stripe, Square, [domain leaders]) 
+handle [problem]. Find architecture, trade-offs, why they chose it."
+
+OSS: "Research open-source solutions for [problem]. Find top GitHub repos, 
+popular libraries, reference implementations. Note pros/cons."
+```
 
 For each company/project, find:
 - **What approach they use** (architecture, patterns, trade-offs)
 - **Why they chose it** (blog posts, talks, docs)
 - **How it scales** (known limitations, success stories)
-
-Use available tools:
-```bash
-# Web search for approaches
-nia_web_search "[company] [problem] architecture 2025"
-nia_web_search "[problem] open source solution comparison"
-
-# Check GitHub for implementations
-mgrep "[pattern] implementation"
-```
 
 ### 3. Synthesize Options
 

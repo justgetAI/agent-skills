@@ -30,6 +30,7 @@ Run `scripts/init.sh` to scaffold.
 | [lifecycle](rules/lifecycle.md) | Task states and transitions |
 | [foundation](rules/foundation.md) | Foundation doc guidelines |
 | [learnings](rules/learnings.md) | Capturing learnings and anti-patterns |
+| [subagents](rules/subagents.md) | Parallel sub-agent patterns |
 | [feedback](rules/feedback.md) | Self-improvement loop |
 
 ---
