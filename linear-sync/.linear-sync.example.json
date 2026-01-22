@@ -1,0 +1,8 @@
+{
+  "team": "GET",
+  "specDir": "context/specs",
+  "taskDir": "context/tasks",
+  "labelPrefix": "spec:",
+  "taskMapping": "sub-issues",
+  "syncTasks": true
+}
