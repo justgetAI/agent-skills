@@ -1,0 +1,176 @@
+# Planning Workflow
+
+**80% planning, 20% execution.** Thorough planning prevents wasted work.
+
+## The Planning Flow
+
+```
+Idea → Refinement → Research → Spec Draft → Review → Approved Spec
+```
+
+### Phase 1: Idea Refinement
+
+Before any research, clarify the idea:
+
+```markdown
+## Idea Refinement
+
+**What:** [one sentence]
+**Why:** [problem being solved]
+**Who:** [who benefits]
+**Success looks like:** [measurable outcome]
+```
+
+Ask clarifying questions until the idea is crisp.
+
+### Phase 2: Research (Parallel)
+
+Run two researchers in parallel:
+
+| Agent | Purpose |
+|-------|---------|
+| [repo-researcher](../agents/repo-researcher.md) | Find existing patterns, conventions, related code |
+| [learnings-researcher](../agents/learnings-researcher.md) | Surface past learnings and anti-patterns |
+
+```
+┌─────────────────┐     ┌─────────────────┐
+│ repo-researcher │     │learnings-researcher│
+└────────┬────────┘     └────────┬────────┘
+         │                       │
+         └───────────┬───────────┘
+                     ▼
+           [Consolidated Research]
+```
+
+### Phase 3: Research Decision
+
+Based on findings, decide if external research is needed:
+
+| Signal | Action |
+|--------|--------|
+| Familiar pattern, clear path | Skip external research |
+| New technology/pattern | Research framework docs |
+| High risk/complexity | Deep research before proceeding |
+| Security/compliance implications | Mandatory security research |
+
+### Phase 4: External Research (Conditional)
+
+If needed:
+
+```bash
+# Framework docs
+mgrep "how to [pattern] in [framework]"
+
+# Best practices
+nia_web_search "[pattern] best practices [year]"
+```
+
+### Phase 5: Spec Creation
+
+Using research findings, create the spec:
+
+```markdown
+---
+type: feat
+number: [assigned by human]
+title: [clear title]
+planning:
+  detail_level: MINIMAL | MORE | COMPREHENSIVE
+  research_done: [local | local+external]
+  confidence: HIGH | MEDIUM | LOW
+---
+
+# [spec-id] - [Title]
+
+## Goal
+[One paragraph max]
+
+## Research Summary
+[Key findings from research phase]
+
+## Requirements
+- [ ] [Requirement 1]
+- [ ] [Requirement 2]
+
+## Non-Goals
+- [What we're explicitly NOT doing]
+
+## Tasks
+- [ ] task001: [atomic task]
+- [ ] task002: [atomic task]
+
+## Risks
+- [Risk 1]: [mitigation]
+```
+
+### Phase 6: Review
+
+Before marking spec as ready:
+
+```
+┌─────────────────┐     ┌─────────────────┐
+│  spec-reviewer  │     │simplicity-reviewer│
+└────────┬────────┘     └────────┬────────┘
+         │                       │
+         └───────────┬───────────┘
+                     ▼
+           [Approved or Revise]
+```
+
+Both must pass for spec to be approved.
+
+---
+
+## Detail Levels
+
+Choose based on complexity:
+
+| Level | When to Use | Spec Size |
+|-------|-------------|-----------|
+| **MINIMAL** | Simple, familiar patterns | ~50 lines |
+| **MORE** | Moderate complexity, some unknowns | ~100 lines |
+| **COMPREHENSIVE** | High risk, new territory | ~200+ lines |
+
+---
+
+## Quick Commands
+
+```bash
+# Start planning flow
+ctx plan "feature idea"
+
+# Run research
+ctx research "feature keywords"
+
+# Review spec
+ctx review specs/feat001-feature.md
+```
+
+---
+
+## Example Flow
+
+```
+Human: "We need Stripe payments"
+
+1. Refinement:
+   - What: Accept card payments
+   - Why: Revenue
+   - Success: Checkout completes, money received
+
+2. Research (parallel):
+   - repo-researcher: Found existing Payment interface
+   - learnings-researcher: "Use idempotency keys" from past issue
+
+3. Decision: Need Stripe docs (new integration)
+
+4. External research: Stripe Payment Intents API
+
+5. Spec draft: feat001-stripe-payments.md
+
+6. Review:
+   - spec-reviewer: APPROVED (clear, complete)
+   - simplicity-reviewer: APPROVED (no over-engineering)
+
+7. Result: Spec ready for implementation
+```

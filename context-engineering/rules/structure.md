@@ -2,9 +2,11 @@
 
 ```
 context/
-├── foundation/    # Human-authored source of truth
-├── specs/         # Feature/fix/improve definitions
-└── tasks/         # Atomic implementation units
+├── foundation/      # Human-authored source of truth
+├── specs/           # Feature/fix/improve definitions
+├── tasks/           # Atomic implementation units
+├── learnings/       # Solved problems, patterns discovered
+└── anti-patterns/   # What NOT to do
 ```
 
 ## Foundation

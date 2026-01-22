@@ -25,19 +25,38 @@ Run `scripts/init.sh` to scaffold.
 |------|-------------|
 | [structure](rules/structure.md) | Directory layout and purpose |
 | [naming](rules/naming.md) | File naming conventions |
+| [planning](rules/planning.md) | Planning workflow (80/20 rule) |
 | [loading](rules/loading.md) | Context loading protocol |
 | [lifecycle](rules/lifecycle.md) | Task states and transitions |
 | [foundation](rules/foundation.md) | Foundation doc guidelines |
+| [learnings](rules/learnings.md) | Capturing learnings and anti-patterns |
 | [feedback](rules/feedback.md) | Self-improvement loop |
+
+---
+
+## Agents
+
+| Agent | Purpose |
+|-------|---------|
+| [repo-researcher](agents/repo-researcher.md) | Research codebase patterns and conventions |
+| [learnings-researcher](agents/learnings-researcher.md) | Surface past learnings and anti-patterns |
+| [spec-reviewer](agents/spec-reviewer.md) | Review specs for clarity and completeness |
+| [simplicity-reviewer](agents/simplicity-reviewer.md) | Challenge complexity, find simpler solutions |
 
 ---
 
 ## Quick Reference
 
+### Planning Flow (80% planning, 20% execution)
+```
+Idea → Refinement → Research → Spec Draft → Review → Approved Spec
+```
+
 ### Naming
 ```
 specs/feat001-payments.md
 tasks/feat001-task001-stripe.md
+learnings/stripe-idempotency.md
 ```
 
 ### Task States
