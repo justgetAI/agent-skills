@@ -9,27 +9,31 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 | Skill | Description |
 |-------|-------------|
 | [context-engineering](./context-engineering/) | Human-readable context management for specs, tasks, and foundations |
+| [linear-sync](./linear-sync/) | Bidirectional sync between local specs/tasks and Linear issues |
 | [logging-standards](./logging-standards/) | Our standard approach to logging — one event per request with full context |
+| [marketing-copy](./marketing-copy/) | Write compelling marketing copy with Jason Fried clarity + Made to Stick principles |
 
 ## Installation
 
-### Option 1: npx add-skill
+### Claude Code Marketplace (Recommended)
 ```bash
-npx add-skill justgetAI/agent-skills --skill context-engineering
+claude plugin install context-engineering
+claude plugin install linear-sync
+claude plugin install marketing-copy
 ```
 
-### Option 2: Manual (global)
+### Manual (global)
 ```bash
 git clone https://github.com/justgetAI/agent-skills.git /tmp/agent-skills
 mkdir -p ~/.claude/skills
-cp -r /tmp/agent-skills/context-engineering ~/.claude/skills/
+cp -r /tmp/agent-skills/<skill-name> ~/.claude/skills/
 ```
 
-### Option 3: Manual (per-project)
+### Manual (per-project)
 ```bash
 git clone https://github.com/justgetAI/agent-skills.git /tmp/agent-skills
 mkdir -p .claude/skills
-cp -r /tmp/agent-skills/context-engineering .claude/skills/
+cp -r /tmp/agent-skills/<skill-name> .claude/skills/
 ```
 
 ## Skill Structure
