@@ -8,8 +8,7 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 
 | Skill | Description |
 |-------|-------------|
-| [context-engineering](./context-engineering/) | Human-readable context management for specs, tasks, and foundations |
-| [linear-sync](./linear-sync/) | Bidirectional sync between local specs/tasks and Linear issues |
+| [context-engineering](./context-engineering/) | Human-readable context management with modular rules and Linear integration |
 | [logging-standards](./logging-standards/) | Our standard approach to logging — one event per request with full context |
 | [marketing-copy](./marketing-copy/) | Write compelling marketing copy with Jason Fried clarity + Made to Stick principles |
 
@@ -17,9 +16,13 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 
 ### Claude Code Marketplace (Recommended)
 ```bash
-claude plugin install context-engineering
-claude plugin install linear-sync
-claude plugin install marketing-copy
+# Add marketplace
+claude plugin marketplace add justgetAI/agent-skills
+
+# Install skills
+claude plugin install context-engineering@justgetai-tools
+claude plugin install logging-standards@justgetai-tools
+claude plugin install marketing-copy@justgetai-tools
 ```
 
 ### Manual (global)
@@ -38,15 +41,21 @@ cp -r /tmp/agent-skills/<skill-name> .claude/skills/
 
 ## Skill Structure
 
-Each skill follows the Agent Skills format:
+Each skill follows the Agent Skills format with modular rules:
 
 ```
 skill-name/
-├── SKILL.md        # Instructions for the agent (required)
-├── README.md       # Human documentation
-├── scripts/        # Helper scripts
-├── references/     # Supporting docs
-└── assets/         # Templates, examples
+├── SKILL.md           # Main instructions (lean, links to rules)
+├── README.md          # Human documentation
+├── rules/             # Modular rule files
+│   ├── naming.md
+│   ├── lifecycle.md
+│   └── ...
+├── integrations/      # Optional integrations
+│   └── linear/
+├── scripts/           # Helper scripts
+├── references/        # Supporting docs
+└── assets/            # Templates, examples
 ```
 
 ## Contributing

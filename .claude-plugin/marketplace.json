@@ -6,24 +6,16 @@
   },
   "metadata": {
     "description": "AI coding agent tools by justgetAI",
-    "version": "1.2.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "context-engineering",
       "source": "./context-engineering",
-      "description": "Human-readable context management for specs, tasks, and foundations",
-      "version": "1.0.0",
+      "description": "Human-readable context management with modular rules, specs, tasks, and Linear integration",
+      "version": "2.0.0",
       "category": "workflow",
-      "tags": ["context", "specs", "tasks", "project-management"]
-    },
-    {
-      "name": "linear-sync",
-      "source": "./linear-sync",
-      "description": "Bidirectional sync between local specs/tasks and Linear issues",
-      "version": "1.0.0",
-      "category": "workflow",
-      "tags": ["linear", "sync", "project-management", "issues"]
+      "tags": ["context", "specs", "tasks", "project-management", "linear"]
     },
     {
       "name": "logging-standards",
