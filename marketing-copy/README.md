@@ -2,6 +2,12 @@
 
 Write compelling marketing copy that captures attention instantly.
 
+## Install
+
+```bash
+claude plugin install marketing-copy
+```
+
 ## Principles
 
 - **Jason Fried's clarity** — direct, no fluff

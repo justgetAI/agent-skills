@@ -2,6 +2,12 @@
 
 Bidirectional sync between local spec/task files and Linear issues.
 
+## Install
+
+```bash
+claude plugin install linear-sync
+```
+
 ## Quick Start
 
 ```bash
