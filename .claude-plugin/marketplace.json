@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "AI coding agent tools by justgetAI",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "plugins": [
     {
@@ -18,12 +18,28 @@
       "tags": ["context", "specs", "tasks", "project-management"]
     },
     {
+      "name": "linear-sync",
+      "source": "./linear-sync",
+      "description": "Bidirectional sync between local specs/tasks and Linear issues",
+      "version": "1.0.0",
+      "category": "workflow",
+      "tags": ["linear", "sync", "project-management", "issues"]
+    },
+    {
       "name": "logging-standards",
       "source": "./logging-standards",
       "description": "Our standard approach to logging. One event per request with full context.",
       "version": "1.0.0",
       "category": "observability",
       "tags": ["logging", "debugging", "observability", "standards"]
+    },
+    {
+      "name": "marketing-copy",
+      "source": "./marketing-copy",
+      "description": "Write compelling marketing copy with Jason Fried clarity + Made to Stick principles",
+      "version": "1.0.0",
+      "category": "writing",
+      "tags": ["marketing", "copywriting", "landing-pages", "headlines"]
     }
   ]
 }
