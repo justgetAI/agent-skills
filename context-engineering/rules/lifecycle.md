@@ -14,49 +14,69 @@ todo → in-progress → done
 | `done` | Completed (stays in place, no archiving) |
 | `blocked` | Cannot proceed — must list blockers |
 
-## State Updates
+## State Management
 
-Agents update their own task status in the frontmatter:
+**Execution state lives in Claude Code Tasks, not in task files.**
 
-```yaml
----
-status: in-progress  # was: todo
-updated: 2026-01-22
----
+```
+context/tasks/*.md          → DEFINITION (what to do)
+~/.claude/tasks/<list>.json → STATE (progress, blockers)
 ```
 
-## Blocked Tasks
+### Why?
+- Cross-session sync (subagents see each other's progress)
+- No file conflicts
+- Live broadcasts when state changes
 
-When blocked, add a `## Blockers` section:
+### How?
+```bash
+# Set shared task list for all sessions
+export CLAUDE_CODE_TASK_LIST_ID=feat001-payments
+
+# Start Claude / spawn subagents
+claude  # or sessions_spawn(...)
+```
+
+## Updating State
+
+Use Claude Code Tasks commands (not file edits):
+
+```
+# Mark task in-progress
+Task feat001-task001: starting
+
+# Mark blocked
+Task feat001-task001: blocked - waiting for Stripe webhook secret
+
+# Mark done
+Task feat001-task001: done
+```
+
+## Task File Content (Definition Only)
+
+Task files contain **what** to do, not **status**:
 
 ```markdown
----
-status: blocked
----
+# feat001-task001: Stripe Integration
 
-# feat001-task002: Webhook Handling
+## Goal
+Implement payment processing with Stripe.
 
-## Blockers
-- [ ] Waiting for Stripe webhook secret from ops team
-- [ ] Need clarification on retry policy
+## Acceptance Criteria
+- Customer creation works
+- Payment intent flow handles success/failure
+- Errors logged properly
 
-## Work Done So Far
-- Set up webhook endpoint
-- Added signature verification logic
+## Technical Notes
+- Use stripe-node SDK
+- Idempotency keys required
 ```
 
 ## Completion
 
-When done, update status and add summary:
+When done, optionally add a `## Summary` section to the task file for future reference:
 
 ```markdown
----
-status: done
-completed: 2026-01-22
----
-
-# feat001-task001: Stripe Integration
-
 ## Summary
 Implemented Stripe payment processing with:
 - Customer creation
@@ -67,3 +87,5 @@ Implemented Stripe payment processing with:
 - src/payments/stripe.ts
 - src/api/checkout.ts
 ```
+
+This stays in the definition file as documentation. State remains in Claude Code Tasks.

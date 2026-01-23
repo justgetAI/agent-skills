@@ -13,6 +13,32 @@ Task A ──► Task B ──► C    Task A ──┐
                               Total: 10s + merge
 ```
 
+## Shared State with Claude Code Tasks
+
+**All subagents should share execution state via a Task List.**
+
+```bash
+# Set before spawning
+export CLAUDE_CODE_TASK_LIST_ID=feat001-payments
+```
+
+This enables:
+- Live sync across all sessions
+- Subagents see each other's progress
+- No file conflicts on status updates
+- Broadcasts when any session updates a task
+
+```
+┌──────────┐    ┌──────────┐    ┌──────────┐
+│ Agent A  │    │ Agent B  │    │ Agent C  │
+└────┬─────┘    └────┬─────┘    └────┬─────┘
+     │               │               │
+     └───────────────┼───────────────┘
+                     ▼
+         Claude Code Tasks (shared)
+         ~/.claude/tasks/<list-id>.json
+```
+
 ## When to Spawn Sub-Agents
 
 | Scenario | Action |
