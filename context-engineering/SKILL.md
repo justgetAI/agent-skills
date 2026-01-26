@@ -1,77 +1,120 @@
 ---
 name: context-engineering
-description: Human-readable context management for AI coding agents. Filesystem-based specs, tasks, and foundation docs.
+description: Human-readable context management for AI coding agents. Filesystem-based specs, tasks, and foundation docs. Includes autonomous workflows with multi-agent research and review.
 compatibility: Claude Code, Cursor, OpenCode, or any markdown-instruction agent
 ---
 
 # Context Engineering
 
-A filesystem-based context system. Human-readable, agent-friendly.
+A filesystem-based context system with autonomous workflows.
 
-```
-context/
-├── foundation/    # Human-authored source of truth
-├── specs/         # Feature/fix/improve definitions
-└── tasks/         # Atomic implementation units
-```
-
-Run `scripts/init.sh` to scaffold.
+> **Philosophy:** 80% planning, 20% execution. Each unit of work makes the next easier.
 
 ---
 
-## Rules
+## Quick Start
 
-| Rule | Description |
-|------|-------------|
-| [structure](rules/structure.md) | Directory layout and purpose |
-| [naming](rules/naming.md) | File naming conventions |
-| [planning](rules/planning.md) | Planning workflow (80/20 rule) |
-| [loading](rules/loading.md) | Context loading protocol |
-| [lifecycle](rules/lifecycle.md) | Task states and transitions |
-| [foundation](rules/foundation.md) | Foundation doc guidelines |
-| [learnings](rules/learnings.md) | Capturing learnings and anti-patterns |
-| [subagents](rules/subagents.md) | Parallel sub-agent patterns |
-| [feedback](rules/feedback.md) | Self-improvement loop |
+### Full Workflow (Recommended)
+```
+/let-it-rip "add stripe payments"
+```
+Runs: understand → plan → work → review → compound. Human approves at gates.
+
+### Individual Commands
+```
+/context-new feat payments    # Create spec with auto-research
+/work                         # Execute current spec
+/review                       # Multi-agent code review
+/compound                     # Capture learnings
+/status                       # See where you are
+```
+
+---
+
+## Commands
+
+| Command | Purpose | Auto-Agents |
+|---------|---------|-------------|
+| [let-it-rip](commands/let-it-rip.md) | Full autonomous workflow | ✅ research, review |
+| [context-new](commands/context-new.md) | Create spec with research | ✅ repo, learnings |
+| [work](commands/work.md) | Execute spec task-by-task | — |
+| [review](commands/review.md) | Multi-perspective code review | ✅ simplicity, spec, bugs |
+| [compound](commands/compound.md) | Capture learnings | — |
+| [status](commands/status.md) | Current progress overview | — |
+| [context-load](commands/context-load.md) | Load active context | — |
+| [deepen-plan](commands/deepen-plan.md) | Research to improve spec | ✅ best practices |
+
+---
+
+## Directory Structure
+
+```
+context/
+├── foundation/    # Human-authored truth (read-only for agents)
+│   ├── architecture.md
+│   ├── conventions.md
+│   └── gotchas.md
+├── specs/         # Feature/fix/improve definitions
+│   └── 2026-01-26-feat-payments.md
+└── tasks/         # (Optional) Atomic task breakdowns
+    └── feat001-task001-setup.md
+
+docs/
+└── solutions/     # Captured learnings from /compound
+    └── 2026-01-26-stripe-webhooks.md
+```
+
+---
+
+## Workflow Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  /let-it-rip "feature description"                         │
+├─────────────────────────────────────────────────────────────┤
+│  1. UNDERSTAND — load foundation, spawn research agents    │
+│     ✋ Gate: confirm understanding                          │
+├─────────────────────────────────────────────────────────────┤
+│  2. PLAN — create spec with acceptance criteria            │
+│     ✋ Gate: approve / refine / deepen                      │
+├─────────────────────────────────────────────────────────────┤
+│  3. WORK — execute via TodoWrite, incremental commits      │
+│     ✋ Gate: ready for review?                              │
+├─────────────────────────────────────────────────────────────┤
+│  4. REVIEW — spawn reviewers: simplicity, spec, bugs       │
+│     ✋ Gate: fix / ship / discuss                           │
+├─────────────────────────────────────────────────────────────┤
+│  5. COMPOUND — capture learnings to docs/solutions/        │
+│     ✋ Gate: done!                                          │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## Agents
 
-| Agent | Purpose |
-|-------|---------|
-| [repo-researcher](agents/repo-researcher.md) | Research codebase patterns and conventions |
-| [learnings-researcher](agents/learnings-researcher.md) | Surface past learnings and anti-patterns |
-| [options-researcher](agents/options-researcher.md) | Research enterprise/OSS approaches, present options |
-| [spec-reviewer](agents/spec-reviewer.md) | Review specs for clarity and completeness |
-| [simplicity-reviewer](agents/simplicity-reviewer.md) | Challenge complexity, find simpler solutions |
+Auto-spawned during workflows:
+
+| Agent | When Used | Purpose |
+|-------|-----------|---------|
+| [repo-researcher](agents/repo-researcher.md) | /context-new, /let-it-rip | Find relevant codebase patterns |
+| [learnings-researcher](agents/learnings-researcher.md) | /context-new, /let-it-rip | Surface past learnings |
+| [options-researcher](agents/options-researcher.md) | /deepen-plan | Research approaches, present options |
+| [simplicity-reviewer](agents/simplicity-reviewer.md) | /review | Challenge complexity |
+| [spec-reviewer](agents/spec-reviewer.md) | /review | Check spec compliance |
 
 ---
 
-## Quick Reference
+## Rules
 
-### Planning Flow (80% planning, 20% execution)
-```
-Idea → Refinement → Research → Options → Decision → Spec Draft → Review → Approved
-```
+| Rule | Key Point |
+|------|-----------|
+| [planning](rules/planning.md) | 80% planning, 20% execution |
+| [foundation](rules/foundation.md) | Foundation is read-only for agents |
+| [learnings](rules/learnings.md) | Always run /compound after features |
+| [subagents](rules/subagents.md) | Spawn parallel agents for research |
 
-### Naming
-```
-specs/feat001-payments.md
-tasks/feat001-task001-stripe.md
-learnings/stripe-idempotency.md
-```
-
-### Task States
-```
-todo → in-progress → done
-                  ↘ blocked
-```
-
-### Load Context (sub-agent)
-```
-Read context/foundation/*.md + active spec + its tasks.
-Return condensed summary.
-```
+See [rules/](rules/) for complete guidelines.
 
 ---
 
@@ -90,6 +133,15 @@ Return condensed summary.
 
 ---
 
-## Commands
+## Philosophy
 
-See [commands/](commands/) for available CLI commands.
+**Compound Engineering:** Each unit of work should make subsequent units easier.
+
+- **Plan thoroughly** before writing code
+- **Review** to catch issues and capture learnings  
+- **Codify knowledge** so it's reusable
+- **Keep quality high** so future changes are easy
+
+---
+
+*Inspired by [compound-engineering](https://every.to/chain-of-thought/compound-engineering-how-every-codes-with-agents), adapted for filesystem-based context management.*
