@@ -39,6 +39,33 @@ load_config() {
         DEFAULT_TEAM=$(jq -r '.team // ""' "$CONFIG_FILE")
         TASK_MAPPING=$(jq -r '.taskMapping // "sub-issues"' "$CONFIG_FILE")
     fi
+    
+    # Auto-detect team from directory if not set in config
+    if [[ -z "$DEFAULT_TEAM" ]]; then
+        DEFAULT_TEAM=$(detect_team_from_dir)
+    fi
+}
+
+# Auto-detect Linear team from current directory name
+detect_team_from_dir() {
+    local dir=$(basename "$(pwd)")
+    
+    # Check for known project patterns
+    case "$dir" in
+        loadhealth-*|load-*)   echo "Load" ;;
+        flexpay-*)             echo "FlexPay" ;;
+        pelian-*|pelian)       echo "Pelian" ;;
+        *)
+            # Try parent directory if current doesn't match
+            local parent=$(basename "$(dirname "$(pwd)")")
+            case "$parent" in
+                loadhealth-*|load-*)   echo "Load" ;;
+                flexpay-*)             echo "FlexPay" ;;
+                pelian-*|pelian)       echo "Pelian" ;;
+                *)                     echo "" ;;
+            esac
+            ;;
+    esac
 }
 
 # Check dependencies

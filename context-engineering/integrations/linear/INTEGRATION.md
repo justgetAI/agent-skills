@@ -22,7 +22,14 @@ npm install -g linearis
 export LINEAR_API_TOKEN="lin_api_..."
 ```
 
-### 3. Configure (project root)
+### 3. Configure (optional — auto-detects from directory)
+
+The script auto-detects team from directory name:
+- `loadhealth-*` or `load-*` → **Load**
+- `flexpay-*` → **FlexPay**
+- `pelian-*` → **Pelian**
+
+Or set explicitly via config:
 ```bash
 cp integrations/linear/.linear-sync.example.json .linear-sync.json
 # Edit with your team key
