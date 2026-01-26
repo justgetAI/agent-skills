@@ -36,7 +36,7 @@ Runs: understand → plan → work → review → compound. Human approves at ga
 | Command | Purpose | Auto-Agents |
 |---------|---------|-------------|
 | [swarm-context-engineer](commands/swarm-context-engineer.md) | Full autonomous workflow | ✅ research, review |
-| [doc-audit](commands/doc-audit.md) | Audit codebase docs, generate specs | ✅ hierarchical swarm |
+| [audit-context](commands/audit-context.md) | Audit codebase docs, generate specs | ✅ hierarchical swarm |
 | [context-new](commands/context-new.md) | Create spec with research | ✅ repo, learnings |
 | [work](commands/work.md) | Execute spec task-by-task | — |
 | [review](commands/review.md) | Multi-perspective code review | ✅ simplicity, spec, bugs |
