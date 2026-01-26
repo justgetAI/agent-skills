@@ -18,6 +18,28 @@ Human stays in the loop at gates. Agents handle research and execution.
 
 ---
 
+## Phase 0: Setup Task List
+
+**Auto-set `CLAUDE_CODE_TASK_LIST_ID` for cross-session sync.**
+
+```bash
+# Derive from feature name or timestamp
+TASK_LIST_ID=$(echo "$ARGUMENTS" | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 30)-$(date +%Y%m%d)
+
+# If no arguments, use project + timestamp
+if [ -z "$ARGUMENTS" ]; then
+  TASK_LIST_ID="$(basename $PWD)-$(date +%Y%m%d%H%M)"
+fi
+
+export CLAUDE_CODE_TASK_LIST_ID="$TASK_LIST_ID"
+```
+
+**Why:** All spawned agents (reviewers, researchers) share task state. Updates broadcast live.
+
+**Announce:** "Task list: `$TASK_LIST_ID` — all agents will sync to this."
+
+---
+
 ## Phase 1: Understand
 
 **Goal:** Gather context before planning.

@@ -46,6 +46,22 @@ Audit and generate documentation for a codebase using a hierarchical agent swarm
 
 ---
 
+## Setup Task List
+
+**Auto-set `CLAUDE_CODE_TASK_LIST_ID` for swarm coordination.**
+
+```bash
+# Derive from codebase name + audit timestamp
+CODEBASE_NAME=$(basename "${ARGUMENTS:-$(pwd)}")
+export CLAUDE_CODE_TASK_LIST_ID="audit-${CODEBASE_NAME}-$(date +%Y%m%d%H%M)"
+```
+
+**Why:** Scout, managers, and workers all share state. Progress broadcasts live across all agents.
+
+**Announce:** "Audit task list: `$CLAUDE_CODE_TASK_LIST_ID` — all swarm agents synced."
+
+---
+
 ## Phase 1: Discovery (Haiku Scout)
 
 Spawn a single Haiku agent to explore:

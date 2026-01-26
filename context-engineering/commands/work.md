@@ -24,6 +24,22 @@ Or check git branch name for hint.
 
 ---
 
+## Setup Task List
+
+**Auto-set `CLAUDE_CODE_TASK_LIST_ID` for cross-session sync.**
+
+```bash
+# Derive from spec name
+SPEC_NAME=$(basename "<spec_path>" .md | sed 's/^[0-9-]*//')
+export CLAUDE_CODE_TASK_LIST_ID="$SPEC_NAME"
+```
+
+**Why:** If you spawn sub-agents or continue in a new session, task state syncs automatically.
+
+**Announce:** "Task list: `$CLAUDE_CODE_TASK_LIST_ID` — progress will sync across sessions."
+
+---
+
 ## Setup
 
 ### 1. Read Spec
