@@ -16,7 +16,7 @@ A filesystem-based context system with autonomous workflows.
 
 ### Full Workflow (Recommended)
 ```
-/let-it-rip "add stripe payments"
+/swarm-context-engineer "add stripe payments"
 ```
 Runs: understand → plan → work → review → compound. Human approves at gates.
 
@@ -35,7 +35,7 @@ Runs: understand → plan → work → review → compound. Human approves at ga
 
 | Command | Purpose | Auto-Agents |
 |---------|---------|-------------|
-| [let-it-rip](commands/let-it-rip.md) | Full autonomous workflow | ✅ research, review |
+| [swarm-context-engineer](commands/swarm-context-engineer.md) | Full autonomous workflow | ✅ research, review |
 | [context-new](commands/context-new.md) | Create spec with research | ✅ repo, learnings |
 | [work](commands/work.md) | Execute spec task-by-task | — |
 | [review](commands/review.md) | Multi-perspective code review | ✅ simplicity, spec, bugs |
@@ -70,7 +70,7 @@ docs/
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  /let-it-rip "feature description"                         │
+│  /swarm-context-engineer "feature description"             │
 ├─────────────────────────────────────────────────────────────┤
 │  1. UNDERSTAND — load foundation, spawn research agents    │
 │     ✋ Gate: confirm understanding                          │

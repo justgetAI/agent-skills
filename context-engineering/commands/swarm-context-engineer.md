@@ -1,10 +1,10 @@
 ---
-name: let-it-rip
+name: swarm-context-engineer
 description: Full autonomous engineering workflow — plan, work, review, compound
 argument-hint: "[feature description or problem to solve]"
 ---
 
-# Let It Rip — Autonomous Engineering Workflow
+# Swarm Context Engineer — Autonomous Workflow
 
 End-to-end workflow: understand → plan → work → review → compound.
 
