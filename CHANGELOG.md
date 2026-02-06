@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.2.0] - 2026-02-06
+
+### Added
+- `npx skills add` as primary install method via [Vercel Labs Skills CLI](https://github.com/vercel-labs/skills)
+- `orchestrating-swarms` entry in marketplace.json
+- `.claude-plugin/plugin.json` for orchestrating-swarms and marketing-copy
+- `compatibility` and `metadata` fields in all SKILL.md frontmatter (agentskills.io spec)
+- Cross-tool installation instructions in README (Cursor, Gemini CLI, etc.)
+
+### Fixed
+- Removed deleted `logging-standards` from marketplace.json
+- Marketplace now lists exactly 3 skills matching repo contents
+
+### Changed
+- Bumped marketplace version to 2.2.0
+- Replaced non-spec `activators` field in marketing-copy/SKILL.md with `metadata`
+
 ## [2.1.0] - 2026-01-26
 
 ### Added

@@ -1,0 +1,10 @@
+{
+  "name": "marketing-copy",
+  "description": "Write compelling marketing copy with Jason Fried clarity + Made to Stick principles",
+  "version": "1.0.0",
+  "author": { "name": "justgetAI" },
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT",
+  "keywords": ["marketing", "copywriting", "landing-pages", "headlines"]
+}

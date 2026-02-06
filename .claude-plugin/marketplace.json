@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "AI coding agent tools by justgetAI",
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "plugins": [
     {
@@ -18,20 +18,20 @@
       "tags": ["context", "specs", "tasks", "swarm", "project-management", "claude-code-tasks"]
     },
     {
-      "name": "logging-standards",
-      "source": "./logging-standards",
-      "description": "Our standard approach to logging. One event per request with full context.",
-      "version": "1.0.0",
-      "category": "observability",
-      "tags": ["logging", "debugging", "observability", "standards"]
-    },
-    {
       "name": "marketing-copy",
       "source": "./marketing-copy",
       "description": "Write compelling marketing copy with Jason Fried clarity + Made to Stick principles",
       "version": "1.0.0",
       "category": "writing",
       "tags": ["marketing", "copywriting", "landing-pages", "headlines"]
+    },
+    {
+      "name": "orchestrating-swarms",
+      "source": "./orchestrating-swarms",
+      "description": "Multi-agent orchestration using Claude Code's TeammateTool and Task system",
+      "version": "1.0.0",
+      "category": "workflow",
+      "tags": ["swarm", "multi-agent", "orchestration", "teammatetool", "tasks"]
     }
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "name": "orchestrating-swarms",
+  "description": "Multi-agent orchestration using Claude Code's TeammateTool and Task system",
+  "version": "1.0.0",
+  "author": { "name": "justgetAI" },
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT",
+  "keywords": ["swarm", "multi-agent", "orchestration", "teammatetool", "tasks"]
+}

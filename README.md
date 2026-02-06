@@ -14,7 +14,22 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 
 ## Installation
 
-### Claude Code Marketplace (Recommended)
+### npx skills add (Recommended)
+
+One command via the [Vercel Labs Skills CLI](https://github.com/vercel-labs/skills):
+
+```bash
+npx skills add justgetAI/agent-skills --skill "context-engineering"
+npx skills add justgetAI/agent-skills --skill "marketing-copy"
+npx skills add justgetAI/agent-skills --skill "orchestrating-swarms"
+```
+
+List all available skills:
+```bash
+npx skills add justgetAI/agent-skills --list
+```
+
+### Claude Code Marketplace
 ```bash
 # Add marketplace
 claude plugin marketplace add justgetAI/agent-skills
@@ -22,7 +37,12 @@ claude plugin marketplace add justgetAI/agent-skills
 # Install skills
 claude plugin install context-engineering@justgetai-tools
 claude plugin install marketing-copy@justgetai-tools
+claude plugin install orchestrating-swarms@justgetai-tools
 ```
+
+### Other Tools (Cursor, Gemini CLI, etc.)
+
+Skills follow the [Agent Skills](https://agentskills.io/) open format. Copy the skill directory into your tool's instruction path — each `SKILL.md` works as a standalone prompt.
 
 ### Manual (global)
 ```bash

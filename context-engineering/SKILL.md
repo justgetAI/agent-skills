@@ -2,6 +2,9 @@
 name: context-engineering
 description: Human-readable context management for AI coding agents. Filesystem-based specs, tasks, and foundation docs. Includes autonomous workflows with multi-agent research and review.
 compatibility: Claude Code, Cursor, OpenCode, or any markdown-instruction agent
+metadata:
+  author: justgetAI
+  version: "2.1"
 ---
 
 # Context Engineering
