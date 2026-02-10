@@ -1,10 +1,10 @@
 ---
-name: context-new
+name: spec
 description: Create a new spec with automatic research and planning
 argument-hint: "[type] [name] or just describe what you want to build"
 ---
 
-# Create New Spec
+# spec — Create New Spec
 
 Intelligent spec creation with automatic research.
 

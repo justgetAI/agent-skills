@@ -1,10 +1,10 @@
 ---
-name: deepen-plan
+name: deepen
 description: Enhance a spec with parallel research agents for each section
 argument-hint: "[path to spec file]"
 ---
 
-# Deepen Plan
+# deepen — Enhance Spec with Research
 
 Enhance an existing spec with parallel research. Each section gets its own research sub-agent.
 
@@ -142,10 +142,30 @@ Use Stripe for payments.
 - "Scaling Payments at Shopify" (2025 blog post)
 ```
 
+## Team Integration
+
+When called from `lets-ship`, research agents are spawned as **team members** (traced) rather than subagents:
+
+```javascript
+// Each research agent gets a task and reports findings
+TaskCreate({ subject: "Deepen: <section>", description: "Research best practices for <section>" })
+
+Task({
+  team_name: current_team,
+  name: "options-researcher",
+  subagent_type: "context-engineering:options-researcher",
+  prompt: "Research best practices for <section>. Update your task with ## Findings. SendMessage to lead."
+})
+```
+
+Findings persist in team task history for future reference.
+
+---
+
 ## When to Use
 
-| Scenario | Use Deepen Plan? |
-|----------|------------------|
+| Scenario | Use Deepen? |
+|----------|------------|
 | Quick internal feature | No — overkill |
 | Complex new system | Yes |
 | Unfamiliar domain | Yes |

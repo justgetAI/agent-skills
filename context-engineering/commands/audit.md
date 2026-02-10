@@ -1,10 +1,10 @@
 ---
-name: audit-context
+name: audit
 description: Audit codebase documentation using hierarchical swarm — discover features, extract context, generate specs
 argument-hint: "[path to codebase, defaults to current directory]"
 ---
 
-# Audit Context — Hierarchical Swarm Documentation
+# audit — Hierarchical Swarm Documentation
 
 Audit and generate documentation for a codebase using a hierarchical agent swarm.
 
