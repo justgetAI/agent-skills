@@ -1,9 +1,9 @@
 # {spec_id}-task{###}: {name}
 
-<!-- 
+<!--
   task_id: {spec_id}-task{###}
-  NOTE: Execution state (status, blockers) lives in Claude Code Tasks, not here.
-  This file defines WHAT to do. State is tracked via CLAUDE_CODE_TASK_LIST_ID.
+  NOTE: Execution state (status, blockers) lives in native Tasks or Teams, not here.
+  This file defines WHAT to do. State is tracked via TaskCreate/TaskUpdate.
 -->
 
 ## Goal

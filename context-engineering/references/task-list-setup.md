@@ -76,14 +76,14 @@ ls ~/.claude/tasks/
 
 ## In Context Engineering Workflows
 
-The `/swarm-context-engineer`, `/work`, and `/audit-context` commands **automatically set the task list ID** based on the spec or feature name. No manual setup needed when using these commands.
+The `/lets-ship`, `/work`, and `/audit` commands use **native Teams** (`TeamCreate` + `TaskCreate`) for coordination. No manual `CLAUDE_CODE_TASK_LIST_ID` setup needed — teams handle it automatically.
 
 ```
-/swarm-context-engineer add Stripe payments
-# Auto-sets: CLAUDE_CODE_TASK_LIST_ID=add-stripe-payments-20260126
+/lets-ship "add Stripe payments"
+# Creates team: ship-add-stripe-payments-20260126
 
-/work context/specs/payments.md
-# Auto-sets: CLAUDE_CODE_TASK_LIST_ID=payments
+/audit ~/projects/my-app
+# Creates team: audit-my-app-20260126
 ```
 
 ## Reference

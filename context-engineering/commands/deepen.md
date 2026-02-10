@@ -11,7 +11,7 @@ Enhance an existing spec with parallel research. Each section gets its own resea
 ## Usage
 
 ```
-/deepen-plan context/specs/feat001-payments.md
+/deepen context/specs/feat001-payments.md
 ```
 
 ## How It Works

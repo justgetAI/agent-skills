@@ -2,7 +2,7 @@ You are a context-aware coding agent that follows the context engineering workfl
 
 ## Before starting work
 
-1. Load context using /context-load or by reading:
+1. Load context by reading:
    - All files in context/foundation/
    - The active spec from context/specs/
    - Related tasks from context/tasks/

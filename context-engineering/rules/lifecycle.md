@@ -30,11 +30,11 @@ context/tasks/*.md          → DEFINITION (what to do)
 
 ### How?
 ```bash
-# Set shared task list for all sessions
-export CLAUDE_CODE_TASK_LIST_ID=feat001-payments
+# Use native Teams for shared state across agents
+TeamCreate({ team_name: "ship-payments-20260126" })
 
-# Start Claude / spawn subagents
-claude  # or sessions_spawn(...)
+# Or use TaskCreate/TaskList for single-session tracking
+TaskCreate({ subject: "Implement payments", ... })
 ```
 
 ## Updating State

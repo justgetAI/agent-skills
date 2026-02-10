@@ -92,7 +92,7 @@ After creating spec, ask:
 1. **Refine** — I'll ask clarifying questions to improve it
 2. **Deepen** — Run parallel research on best practices, edge cases
 3. **Start work** — Begin implementation with `/work`
-4. **Full workflow** — Run complete `/let-it-rip` from here
+4. **Full workflow** — Run complete `/lets-ship` from here
 5. **Edit manually** — Open in editor, I'll wait
 
 ---

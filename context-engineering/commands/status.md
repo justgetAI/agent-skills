@@ -29,7 +29,7 @@ git branch --show-current
 ls -t context/specs/*.md | head -5
 ```
 
-### 2. Spec Listing (from context-list)
+### 2. Spec Listing
 
 List all specs with completion status:
 
