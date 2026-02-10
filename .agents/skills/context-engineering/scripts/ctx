@@ -1,0 +1,294 @@
+#!/bin/sh
+# ctx - Context Engineering CLI
+# Quick spec/task creation and listing
+#
+# Usage:
+#   ctx new spec <type> <name>     Create new spec
+#   ctx new task <spec> <name>     Create new task for spec
+#   ctx list specs                 List all specs
+#   ctx list tasks [spec]          List tasks (optionally filtered)
+#   ctx help                       Show this help
+
+set -e
+
+CONTEXT_DIR="context"
+
+# Check we're in a project with context/
+check_context() {
+    if [ ! -d "$CONTEXT_DIR" ]; then
+        echo "Error: No context/ directory found."
+        echo "Run init.sh first or cd to project root."
+        exit 1
+    fi
+}
+
+show_help() {
+    echo "ctx - Context Engineering CLI"
+    echo ""
+    echo "Usage:"
+    echo "  ctx new spec <type> <name>     Create new spec (type: feat|fix|improve)"
+    echo "  ctx new task <spec> <name>     Create new task (e.g., ctx new task feat001 setup)"
+    echo "  ctx list specs                 List all specs"
+    echo "  ctx list tasks [spec]          List tasks (optionally filter by spec)"
+    echo "  ctx feedback <spec> <1-5> [issue]  Rate completed spec, auto-creates improve if ≤3"
+    echo "  ctx help                       Show this help"
+    echo ""
+    echo "Examples:"
+    echo "  ctx new spec feat payments"
+    echo "  ctx new task feat001 stripe-integration"
+    echo "  ctx list specs"
+    echo "  ctx list tasks feat001"
+    echo "  ctx feedback feat001 2 too-verbose"
+}
+
+# Get next spec number for a type
+next_spec_num() {
+    type="$1"
+    existing=$(ls "$CONTEXT_DIR/specs/" 2>/dev/null | grep "^${type}[0-9]" | sed "s/${type}\([0-9]*\).*/\1/" | sort -n | tail -1)
+    if [ -z "$existing" ]; then
+        echo "001"
+    else
+        printf "%03d" $((existing + 1))
+    fi
+}
+
+# Get next task number for a spec
+next_task_num() {
+    spec="$1"
+    existing=$(ls "$CONTEXT_DIR/tasks/" 2>/dev/null | grep "^${spec}-task[0-9]" | sed "s/${spec}-task\([0-9]*\).*/\1/" | sort -n | tail -1)
+    if [ -z "$existing" ]; then
+        echo "001"
+    else
+        printf "%03d" $((existing + 1))
+    fi
+}
+
+cmd_new_spec() {
+    type="$1"
+    name="$2"
+    
+    if [ -z "$type" ] || [ -z "$name" ]; then
+        echo "Error: Usage: ctx new spec <type> <name>"
+        echo "Types: feat, fix, improve"
+        exit 1
+    fi
+    
+    case "$type" in
+        feat|fix|improve) ;;
+        *)
+            echo "Error: Invalid type '$type'. Use feat, fix, or improve."
+            exit 1
+            ;;
+    esac
+    
+    num=$(next_spec_num "$type")
+    filename="${type}${num}-${name}.md"
+    filepath="$CONTEXT_DIR/specs/$filename"
+    
+    cat > "$filepath" << ENDOFSPEC
+# ${type}${num}: ${name}
+
+Linear: N/A
+
+## Problem
+{describe the problem}
+
+## Tasks
+- [ ] task001: {first task}
+
+## Notes
+{optional}
+ENDOFSPEC
+    
+    echo "Created $filepath"
+}
+
+cmd_new_task() {
+    spec="$1"
+    name="$2"
+    
+    if [ -z "$spec" ] || [ -z "$name" ]; then
+        echo "Error: Usage: ctx new task <spec> <name>"
+        echo "Example: ctx new task feat001 stripe-integration"
+        exit 1
+    fi
+    
+    # Validate spec exists
+    specfile=$(ls "$CONTEXT_DIR/specs/${spec}-"*.md 2>/dev/null | head -1)
+    if [ -z "$specfile" ]; then
+        echo "Error: No spec found matching '$spec'"
+        exit 1
+    fi
+    
+    num=$(next_task_num "$spec")
+    filename="${spec}-task${num}-${name}.md"
+    filepath="$CONTEXT_DIR/tasks/$filename"
+    
+    cat > "$filepath" << ENDOFTASK
+# ${spec}-task${num}: ${name}
+
+Status: todo
+
+## Goal
+{1-2 sentences}
+
+## Changes
+- {bullet per change}
+
+## Discoveries
+{findings for foundation - human reviews}
+
+## Blockers
+none
+ENDOFTASK
+    
+    echo "Created $filepath"
+}
+
+cmd_list_specs() {
+    check_context
+    echo "Specs:"
+    ls "$CONTEXT_DIR/specs/"*.md 2>/dev/null | while read f; do
+        [ -f "$f" ] || continue
+        name=$(basename "$f" .md)
+        # Extract spec prefix (e.g., feat001 from feat001-user-auth)
+        prefix=$(echo "$name" | sed 's/^\([a-z]*[0-9]*\)-.*/\1/')
+        total=$(ls "$CONTEXT_DIR/tasks/" 2>/dev/null | grep "^${prefix}-task" | wc -l)
+        completed=$(grep -l "Status: done" "$CONTEXT_DIR/tasks/${prefix}-task"*.md 2>/dev/null | wc -l || echo 0)
+        echo "  $name [$completed/$total tasks]"
+    done
+}
+
+cmd_list_tasks() {
+    check_context
+    filter="$1"
+    
+    echo "Tasks:"
+    ls "$CONTEXT_DIR/tasks/"*.md 2>/dev/null | while read f; do
+        [ -f "$f" ] || continue
+        name=$(basename "$f" .md)
+        
+        # Apply filter if provided
+        if [ -n "$filter" ]; then
+            case "$name" in
+                ${filter}-*) ;;
+                *) continue ;;
+            esac
+        fi
+        
+        status=$(grep "^Status:" "$f" 2>/dev/null | head -1 | sed 's/Status: //' || echo "unknown")
+        echo "  $name [$status]"
+    done
+}
+
+cmd_feedback() {
+    spec="$1"
+    rating="$2"
+    issue="$3"
+    
+    if [ -z "$spec" ] || [ -z "$rating" ]; then
+        echo "Error: Usage: ctx feedback <spec> <1-5> [issue-slug]"
+        echo "Example: ctx feedback feat001 2 too-verbose"
+        exit 1
+    fi
+    
+    # Validate rating
+    case "$rating" in
+        1|2|3|4|5) ;;
+        *)
+            echo "Error: Rating must be 1-5"
+            exit 1
+            ;;
+    esac
+    
+    # Find spec file
+    specfile=$(ls "$CONTEXT_DIR/specs/${spec}-"*.md 2>/dev/null | head -1)
+    if [ -z "$specfile" ]; then
+        echo "Error: No spec found matching '$spec'"
+        exit 1
+    fi
+    
+    # Update spec with feedback
+    if grep -q "^Rating:" "$specfile" 2>/dev/null; then
+        # Update existing rating
+        sed -i "s/^Rating:.*/Rating: $rating/" "$specfile"
+    else
+        # Append feedback section if not present
+        if ! grep -q "^## Feedback" "$specfile" 2>/dev/null; then
+            echo "" >> "$specfile"
+            echo "## Feedback" >> "$specfile"
+            echo "Rating: $rating" >> "$specfile"
+            echo "Issue: ${issue:-none}" >> "$specfile"
+        else
+            sed -i "s/^Rating:.*/Rating: $rating/" "$specfile"
+        fi
+    fi
+    
+    # Update issue line
+    if [ -n "$issue" ]; then
+        sed -i "s/^Issue:.*/Issue: $issue/" "$specfile"
+    fi
+    
+    echo "Updated $specfile with rating $rating"
+    
+    # Auto-create improve spec if rating <= 3 and issue provided
+    if [ "$rating" -le 3 ] && [ -n "$issue" ]; then
+        num=$(next_spec_num "improve")
+        filename="improve${num}-${issue}.md"
+        filepath="$CONTEXT_DIR/specs/$filename"
+        
+        cat > "$filepath" << ENDOFIMPROVE
+# improve${num}: ${issue}
+
+Linear: N/A
+Source: ${spec}
+
+## Problem
+Feedback from ${spec}: rating $rating/5
+Issue: ${issue}
+
+## Tasks
+- [ ] task001: analyze-root-cause
+- [ ] task002: implement-fix
+
+## Notes
+Auto-generated from feedback on ${spec}
+ENDOFIMPROVE
+        
+        echo "Created $filepath (auto-generated from low rating)"
+    fi
+}
+
+# Main command routing
+case "$1" in
+    new)
+        check_context
+        case "$2" in
+            spec) cmd_new_spec "$3" "$4" ;;
+            task) cmd_new_task "$3" "$4" ;;
+            *) echo "Error: ctx new <spec|task>"; exit 1 ;;
+        esac
+        ;;
+    list)
+        case "$2" in
+            specs) cmd_list_specs ;;
+            tasks) cmd_list_tasks "$3" ;;
+            *) echo "Error: ctx list <specs|tasks>"; exit 1 ;;
+        esac
+        ;;
+    feedback)
+        check_context
+        cmd_feedback "$2" "$3" "$4"
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    "")
+        show_help
+        ;;
+    *)
+        echo "Error: Unknown command '$1'"
+        show_help
+        exit 1
+        ;;
+esac
