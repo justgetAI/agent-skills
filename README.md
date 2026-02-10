@@ -8,7 +8,7 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 
 | Skill | Description |
 |-------|-------------|
-| [context-engineering](./context-engineering/) | Human-readable context management with modular rules and Linear integration |
+| [context-engineering](./context-engineering/) | Ship features with full traceability — specs, tasks, multi-agent review, native Teams |
 | [marketing-copy](./marketing-copy/) | Write compelling marketing copy with Jason Fried clarity + Made to Stick principles |
 | [orchestrating-swarms](./orchestrating-swarms/) | Multi-agent orchestration using Claude Code's TeammateTool and Task system |
 

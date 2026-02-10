@@ -1,76 +1,101 @@
 # Context Engineering
 
-Human-readable context management for AI coding agents.
+Ship features with full traceability. Filesystem-based specs, tasks, and foundation docs — powered by native Claude Code Teams.
 
 ## What is it?
 
-A filesystem-based system for managing specs, tasks, and foundation docs. Works across Claude Code, Cursor, OpenCode, and any markdown-instruction agent.
+An autonomous engineering workflow: understand > plan > work > review > compound. Every phase creates team members and tasks that persist as a queryable trace of **what** was built, **why**, and **how**.
+
+Works across Claude Code, Cursor, OpenCode, and any markdown-instruction agent.
 
 ## Installation
 
-### Claude Code
+### Claude Code Marketplace
 ```bash
-# Option A: npx
-npx add-skill justgetAI/agent-skills --skill context-engineering
+claude plugin marketplace add justgetAI/agent-skills
+claude plugin install context-engineering@justgetai-tools
+```
 
-# Option B: Manual
+### npx
+```bash
+npx skills add justgetAI/agent-skills --skill "context-engineering"
+```
+
+### Manual
+```bash
 git clone https://github.com/justgetAI/agent-skills.git /tmp/agent-skills
 mkdir -p ~/.claude/skills
 cp -r /tmp/agent-skills/context-engineering ~/.claude/skills/
 ```
 
-### Cursor
-Copy contents of `references/integrations/cursor-rules.md` into `.cursorrules`
-
-### Other agents
-See `references/integrations/generic.md`
-
-## Quick Start (after installation)
+## Quick Start
 
 ```bash
-# 1. Initialize context/ in your project
-~/.claude/skills/context-engineering/scripts/init.sh
-# or with examples:
-~/.claude/skills/context-engineering/scripts/init.sh --with-examples
+# Full workflow — human gates at each phase
+/lets-ship "add stripe payments"
 
-# 2. Create specs and tasks
-~/.claude/skills/context-engineering/scripts/ctx new spec feat payments
-~/.claude/skills/context-engineering/scripts/ctx new task feat001 stripe-integration
+# Autonomous — skip gates, auto-fix, auto-PR
+/lets-ship --auto "fix login timeout"
 ```
 
-Or just ask your agent to "set up context engineering" — it will read SKILL.md and know what to do.
+That's it. `lets-ship` handles everything: bootstraps `context/` if needed, spawns research agents, creates specs, executes tasks, runs multi-agent review, captures learnings.
+
+## Commands
+
+| Command | What it does |
+|---------|-------------|
+| `/lets-ship` | Full pipeline: understand > plan > work > review > compound |
+| `/spec` | Create a spec with automatic research |
+| `/work` | Execute current spec task-by-task |
+| `/review` | Multi-agent code review (simplicity + spec + bugs) |
+| `/compound` | Capture learnings + rate spec quality |
+| `/status` | Progress overview, spec listing, team history |
+| `/deepen` | Enhance spec with parallel research |
+| `/audit` | Audit codebase docs via hierarchical swarm |
+
+## Agents
+
+Spawned as **team members** with persistent task traces:
+
+| Agent | Role |
+|-------|------|
+| `repo-researcher` | Find codebase patterns and conventions |
+| `learnings-researcher` | Surface past solutions and anti-patterns |
+| `options-researcher` | Research approaches with trade-off analysis |
+| `simplicity-reviewer` | Challenge complexity, find simpler alternatives |
+| `spec-reviewer` | Verify spec compliance and completeness |
+| `bug-hunter` | Hunt for bugs, edge cases, security issues |
+| `context-worker` | Context-aware implementation agent |
 
 ## Directory Structure
 
 ```
 context/
-├── foundation/    # Human-authored source of truth (read-only for agents)
+├── foundation/    # Human-authored truth (read-only for agents)
 ├── specs/         # Feature/fix/improve definitions
-└── tasks/         # Atomic implementation units
+└── tasks/         # Atomic task breakdowns
+
+docs/solutions/    # Captured learnings from /compound
+
+~/.claude/teams/ship-*/   # Team traces (persist after completion)
+~/.claude/tasks/ship-*/   # Task history (queryable via /status --teams)
 ```
+
+## How Traceability Works
+
+Every `/lets-ship` run creates a team (`ship-<feature>-<date>`) with tasks for each phase. Research agents, reviewers, and implementation steps all update their tasks with `## Findings` or `## Changes`. After completion:
+
+- `/status --teams` lists all feature traces
+- Each team's task list shows the full development history
+- Research findings, review verdicts, and learnings are all queryable
 
 ## Philosophy
 
-- **Human-readable** — `cat` any file, instantly know state
-- **Foundation-first** — reference foundation before doing work
-- **Gated writes** — agents read foundation, never write directly
-- **No archiving** — done tasks stay in place, history is a feature
-
-## CLI Reference
-
-```bash
-ctx new spec <type> <name>    # Create spec (feat|fix|improve)
-ctx new task <spec> <name>    # Create task for spec
-ctx list specs                # List all specs with task counts
-ctx list tasks [spec]         # List tasks (optionally filtered)
-```
-
-## Integration Snippets
-
-- [Claude Code](references/integrations/claude-md.md)
-- [Cursor](references/integrations/cursor-rules.md)
-- [Generic](references/integrations/generic.md)
+- **80% planning, 20% execution** — research before code
+- **Compound engineering** — each unit of work makes the next easier
+- **Trace everything** — teams and tasks persist as development history
+- **Human gates** — approve at each phase (or skip with `--auto`)
 
 ## Full Documentation
 
-See [SKILL.md](SKILL.md) for complete workflow instructions.
+See [SKILL.md](SKILL.md) for complete workflow, agent details, and rules.
