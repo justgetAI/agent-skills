@@ -160,3 +160,26 @@ With clear trade-offs and a recommendation matrix.
 ## Integration Point
 
 This agent runs during **Phase 2** of planning, before the user is asked to make architectural decisions. The options inform the questions asked.
+
+## Team Integration
+
+When spawned as a team member during `/lets-ship` or `/deepen`:
+
+1. Read your assigned task for the problem and domain
+2. Perform the research
+3. Update your task with `## Findings`:
+   ```javascript
+   TaskUpdate({
+     taskId: assigned_task_id,
+     description: append "## Findings\n[your options matrix output]"
+   })
+   ```
+4. Send summary to lead:
+   ```javascript
+   SendMessage({
+     type: "message",
+     recipient: "team-lead",
+     content: "[concise options summary with recommendation]",
+     summary: "Options research complete"
+   })
+   ```

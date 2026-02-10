@@ -63,3 +63,26 @@ Return a concise summary:
 ```
 
 Be concise. Focus on actionable findings.
+
+## Team Integration
+
+When spawned as a team member during `/lets-ship`:
+
+1. Read your assigned task for the feature description
+2. Perform the research
+3. Update your task with `## Findings`:
+   ```javascript
+   TaskUpdate({
+     taskId: assigned_task_id,
+     description: append "## Findings\n[your research output]"
+   })
+   ```
+4. Send summary to lead:
+   ```javascript
+   SendMessage({
+     type: "message",
+     recipient: "team-lead",
+     content: "[concise findings summary]",
+     summary: "Repo research complete"
+   })
+   ```
