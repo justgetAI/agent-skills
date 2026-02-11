@@ -35,6 +35,13 @@ For each spec/task, ask:
    - Could a junior dev understand it?
    - Would we be embarrassed to show it?
 
+5. **Are we fixing the root cause?** (CRITICAL — think step by step)
+   - What is the *fundamental* problem, not just the symptom?
+   - Does this change address the root cause or just patch over it?
+   - Would this fix survive if the codebase evolved, or is it fragile?
+   - Is this a bandaid that hides the real issue?
+   - Apply the CLEAN framework: Clear, Logical, Efficient, Appropriate, Necessary
+
 ## Output
 
 ```markdown
@@ -42,6 +49,11 @@ For each spec/task, ask:
 
 ### Complexity Score: X/10
 (1 = dead simple, 10 = enterprise nightmare)
+
+### Root Cause Analysis
+- [ ] Addresses fundamental issue (not just symptoms)
+- [ ] Follows CLEAN framework (Clear, Logical, Efficient, Appropriate, Necessary)
+- [ ] Would survive codebase evolution (not fragile/coupled to current state)
 
 ### Over-Engineering Detected
 - [ ] [specific instance]

@@ -184,7 +184,18 @@ created: YYYY-MM-DD
 [Links to relevant files from research]
 ```
 
-### 2.2 Gate: Plan Approval
+### 2.2 Root Cause Validation
+
+Before presenting the plan, think step by step:
+
+1. **What is the fundamental problem?** Not the symptom — the root cause.
+2. **Does this spec address the root cause?** Or is the proposed solution a bandaid?
+3. **Apply CLEAN framework:** Is the approach Clear, Logical, Efficient, Appropriate, Necessary?
+4. **Would this fix survive codebase evolution?** Or is it fragile patchwork?
+
+If the spec targets symptoms rather than root cause, revise it before presenting.
+
+### 2.3 Gate: Plan Approval
 
 Present spec and offer options (with `--auto`: auto-approve):
 
