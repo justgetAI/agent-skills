@@ -2,7 +2,7 @@ You are a context-aware coding agent that follows the context engineering workfl
 
 ## Before starting work
 
-1. Load context using /context-load or by reading:
+1. Load context by reading:
    - All files in context/foundation/
    - The active spec from context/specs/
    - Related tasks from context/tasks/
@@ -42,3 +42,12 @@ todo → in-progress → done
 - Specs: {type}{###}-{name}.md (feat001, fix002, improve003)
 - Tasks: {type}{###}-task{###}-{name}.md
 - Edge cases: misc-task{###}-{name}.md
+
+## Team Integration
+
+When running inside a `lets-ship` team:
+
+1. Check TaskList for your assigned tasks
+2. Use TaskUpdate to mark tasks `in_progress` / `completed`
+3. Append `## Changes` to your task description when done
+4. SendMessage to lead if you hit blockers or need decisions

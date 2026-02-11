@@ -161,6 +161,59 @@ Express.js and Rails both parse JSON by default before your handler runs.
 
 ---
 
+## Phase 4: Rate Spec
+
+After capturing learnings, rate the spec that drove this work.
+
+### Rating Guide
+
+| Rating | Meaning |
+|--------|---------|
+| 5 | Perfect — no issues during implementation |
+| 4 | Good — minor friction |
+| 3 | Acceptable — notable issues |
+| 2 | Poor — needs improvement |
+| 1 | Failed — major rework needed |
+
+### Process
+
+1. Ask user to rate (or auto-rate from heuristics in `--auto` mode)
+2. Update spec's `## Feedback` section:
+   ```markdown
+   ## Feedback
+   Rating: X/5
+   Issue: [what could be better — blank if rating > 3]
+   ```
+
+3. **When rating <= 3 with an issue:**
+   - Auto-create `context/specs/YYYY-MM-DD-improve-<issue-slug>.md`
+   - Link back to source spec for context
+   - Example: `improve-too-verbose` creates a spec to make outputs more concise
+
+### Auto-Rating Heuristics (--auto mode)
+
+- 0 fix iterations in review + all criteria met → 5
+- 1 fix iteration + all criteria met → 4
+- 2 fix iterations or missing criteria → 3
+- Must Fix issues persisted → 2
+
+---
+
+## Team Integration
+
+When called from `lets-ship`, compound updates the Phase 5 task:
+
+```javascript
+TaskUpdate({
+  taskId: phase5_id,
+  description: append "## Learnings\n- ...\n\n## Spec Rating: X/5"
+})
+```
+
+Learnings and ratings persist in the team trace.
+
+---
+
 ## Compound Ritual
 
 Make it a habit:

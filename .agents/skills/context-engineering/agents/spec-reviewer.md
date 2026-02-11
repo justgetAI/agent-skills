@@ -63,3 +63,26 @@ Spec: context/specs/[spec-file].md
 ```
 
 Be direct. Flag real issues, not nitpicks.
+
+## Team Integration
+
+When spawned as a team member during `/review` or `/lets-ship`:
+
+1. Read your assigned task for scope and context
+2. Perform the review
+3. Update your task with `## Findings`:
+   ```javascript
+   TaskUpdate({
+     taskId: assigned_task_id,
+     description: append "## Findings\n[your review output]"
+   })
+   ```
+4. Send summary to lead:
+   ```javascript
+   SendMessage({
+     type: "message",
+     recipient: "team-lead",
+     content: "Spec review complete. Verdict: [APPROVED / NEEDS REVISION / BLOCKED]",
+     summary: "Spec review: [verdict]"
+   })
+   ```

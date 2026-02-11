@@ -1,10 +1,10 @@
 ---
-name: audit-context
+name: audit
 description: Audit codebase documentation using hierarchical swarm — discover features, extract context, generate specs
 argument-hint: "[path to codebase, defaults to current directory]"
 ---
 
-# Audit Context — Hierarchical Swarm Documentation
+# audit — Hierarchical Swarm Documentation
 
 Audit and generate documentation for a codebase using a hierarchical agent swarm.
 
@@ -46,19 +46,22 @@ Audit and generate documentation for a codebase using a hierarchical agent swarm
 
 ---
 
-## Setup Task List
+## Team Setup
 
-**Auto-set `CLAUDE_CODE_TASK_LIST_ID` for swarm coordination.**
+```javascript
+CODEBASE_NAME = basename(codebase_path)
 
-```bash
-# Derive from codebase name + audit timestamp
-CODEBASE_NAME=$(basename "${ARGUMENTS:-$(pwd)}")
-export CLAUDE_CODE_TASK_LIST_ID="audit-${CODEBASE_NAME}-$(date +%Y%m%d%H%M)"
+TeamCreate({
+  team_name: `audit-${CODEBASE_NAME}-${date}`,
+  description: `Documentation audit for ${CODEBASE_NAME}`
+})
+
+// Create phase tasks
+TaskCreate({ subject: "Discovery", description: "Scout codebase structure, identify feature domains" })
+TaskCreate({ subject: "Domain extraction", description: "Spawn managers per domain, extract docs" })
+TaskCreate({ subject: "Consolidation", description: "Merge specs, propose foundation updates" })
+TaskCreate({ subject: "Human review", description: "Present changes for approval" })
 ```
-
-**Why:** Scout, managers, and workers all share state. Progress broadcasts live across all agents.
-
-**Announce:** "Audit task list: `$CLAUDE_CODE_TASK_LIST_ID` — all swarm agents synced."
 
 ---
 
@@ -79,7 +82,7 @@ Task({
    - Folder names (app/payments, services/auth, etc.)
    - Route files
    - README sections
-   
+
 Output as JSON:
 {
   "structure": { "dir": "file_count" },
@@ -102,25 +105,29 @@ Be thorough but fast. Focus on structure, not content.`,
 
 ## Phase 2: Spawn Managers (Opus)
 
-For each discovered domain, spawn an Opus manager:
+For each discovered domain, spawn an Opus manager as a team member:
 
 ```javascript
-// Create team for this audit
-Teammate({ operation: "spawnTeam", team_name: "doc-audit-<timestamp>" })
-
-// Spawn a manager per domain
+// Create task + spawn manager per domain
 for (const domain of discovery.domains) {
+  TaskCreate({
+    subject: `Extract: ${domain.name}`,
+    description: `Analyze ${domain.path}, consolidate into spec`
+  })
+
   Task({
-    team_name: "doc-audit-<timestamp>",
+    team_name: current_team,
     name: `${domain.name}-manager`,
     subagent_type: "general-purpose",
+    description: `Manage ${domain.name} extraction`,
     prompt: `You are the MANAGER for the "${domain.name}" feature domain.
 
 Your job:
 1. Spawn Sonnet WORKERS to analyze files in ${domain.path}
 2. Review their output for accuracy and completeness
 3. Consolidate into a single spec document
-4. Report back when complete
+4. Update your task with ## Findings when done
+5. SendMessage to lead with summary
 
 Files to analyze: ${domain.path}
 Indicators found: ${domain.indicators.join(", ")}
@@ -161,7 +168,7 @@ generated: <date>
 ## Connections
 [How it relates to other features]
 
-Send your final spec to team-lead when done.`,
+SendMessage to lead when done.`,
     model: "opus",
     run_in_background: true
   })
@@ -180,7 +187,7 @@ Task({
   subagent_type: "Explore",
   description: `Analyze ${filepath}`,
   prompt: `Analyze this file and extract:
-  
+
 1. **Purpose:** What does this file do?
 2. **Key Functions/Classes:** List main exports with one-line descriptions
 3. **Dependencies:** What does it import/require?
@@ -200,7 +207,7 @@ Workers report back to their manager. Manager consolidates.
 
 ## Phase 4: Consolidation
 
-As managers complete, they send specs to team-lead.
+As managers complete, they update tasks and message lead.
 
 Collect all specs and generate:
 
@@ -218,15 +225,15 @@ Present to user:
 ## Doc Audit Complete
 
 ### Auto-Generated (no approval needed)
-- context/specs/auth.md ✅
-- context/specs/payments.md ✅
-- context/specs/notifications.md ✅
+- context/specs/auth.md
+- context/specs/payments.md
+- context/specs/notifications.md
 
 ### Requires Your Approval
 #### CLAUDE.md Changes
 [Show diff of proposed changes]
 
-#### Foundation Updates  
+#### Foundation Updates
 [Show proposed foundation/ files]
 
 **Options:**
@@ -243,13 +250,10 @@ Present to user:
 
 ```bash
 # Audit current directory
-/doc-audit
+/audit
 
 # Audit specific codebase
-/doc-audit ~/projects/my-app
-
-# Audit with specific focus
-/doc-audit ~/projects/my-app --focus auth,payments
+/audit ~/projects/my-app
 ```
 
 ---
@@ -263,27 +267,6 @@ Present to user:
 | Workers | Sonnet | ~5/domain | ~$0.10/domain |
 
 For a 5-domain codebase: ~$3-5 total
-
----
-
-## Tools Integration
-
-**mcp-graph** (if available):
-```javascript
-// Use for understanding code relationships
-mcp_graph.analyze(codebase_path, { depth: 2 })
-```
-
-**TodoWrite** (for tracking):
-```javascript
-TodoWrite({
-  todos: domains.map(d => ({
-    id: d.name,
-    content: `Extract ${d.name} feature docs`,
-    status: "pending"
-  }))
-})
-```
 
 ---
 
@@ -303,4 +286,4 @@ CLAUDE.md.proposed         # Diff for review
 
 ---
 
-*Human stays in control of CLAUDE.md. Specs are auto-generated. Managers ensure quality.*
+*Human stays in control of CLAUDE.md. Specs are auto-generated. Managers ensure quality. All work traced in team tasks.*

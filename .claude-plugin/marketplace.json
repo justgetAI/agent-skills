@@ -6,16 +6,16 @@
   },
   "metadata": {
     "description": "AI coding agent tools by justgetAI",
-    "version": "2.2.0"
+    "version": "3.0.0"
   },
   "plugins": [
     {
       "name": "context-engineering",
       "source": "./context-engineering",
-      "description": "Human-readable context management with swarm workflows, specs, tasks, and cross-session sync via Claude Code Tasks",
-      "version": "2.1.0",
+      "description": "Ship features with full traceability — specs, multi-agent review, native Teams integration, autonomous mode",
+      "version": "3.0.0",
       "category": "workflow",
-      "tags": ["context", "specs", "tasks", "swarm", "project-management", "claude-code-tasks"]
+      "tags": ["context", "specs", "tasks", "teams", "traceability", "multi-agent", "review", "autonomous"]
     },
     {
       "name": "marketing-copy",

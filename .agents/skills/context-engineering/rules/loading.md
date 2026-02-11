@@ -41,16 +41,14 @@ Be concise. Skip boilerplate.
 ## Example: Loading feat001
 
 ```bash
-# Set task list for state sync
-export CLAUDE_CODE_TASK_LIST_ID=feat001-payments
-
 # Agent reads DEFINITIONS:
 context/foundation/*.md           # All foundation docs
 context/specs/feat001-payments.md # Active spec
 context/tasks/feat001-task*.md    # Task definitions
 
-# Agent reads STATE from Claude Code Tasks:
-~/.claude/tasks/feat001-payments.json  # Current statuses, blockers
+# Agent reads STATE from native Tasks:
+TaskList()                        # Current statuses, blockers
+# Or if in a team: ~/.claude/tasks/ship-<slug>-<date>/
 ```
 
 ## Context Summary Format
