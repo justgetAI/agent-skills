@@ -1,10 +1,6 @@
 ---
 name: marketing-copy
 description: Write compelling marketing copy that captures attention instantly and creates emotional resonance. Channels Jason Fried's clarity and Dan Heath's "Made to Stick" principles.
-compatibility: Claude Code, Cursor, Gemini CLI, or any markdown-instruction agent
-metadata:
-  author: justgetAI
-  version: "1.0"
 ---
 
 # Marketing Copy Prompt
