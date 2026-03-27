@@ -1,0 +1,10 @@
+{
+  "name": "marketing",
+  "description": "Marketing toolkit — compelling copywriting and strategic brand naming",
+  "version": "1.0.0",
+  "author": { "name": "justgetAI" },
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT",
+  "keywords": ["marketing", "copywriting", "naming", "branding", "brand-strategy"]
+}
