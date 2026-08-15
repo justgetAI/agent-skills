@@ -1,0 +1,10 @@
+{
+  "name": "prompt-engineering",
+  "description": "Write and improve prompts — the intersection of the five major prompt engineering guides, as one operational checklist",
+  "version": "1.0.0",
+  "author": { "name": "justgetAI" },
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT",
+  "keywords": ["prompt", "prompt-engineering", "few-shot", "chain-of-thought", "rag", "evals"]
+}

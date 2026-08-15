@@ -11,6 +11,7 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 | [context-engineering](./context-engineering/) | Ship features with full traceability — specs, tasks, multi-agent review, native Teams |
 | [marketing-copy](./marketing-copy/) | Write compelling marketing copy with Jason Fried clarity + Made to Stick principles |
 | [orchestrating-swarms](./orchestrating-swarms/) | Multi-agent orchestration using Claude Code's TeammateTool and Task system |
+| [prompt-engineering](./prompt-engineering/) | Write and improve prompts — the intersection of the five major prompt engineering guides, as one operational checklist |
 
 ## Installation
 
@@ -22,6 +23,7 @@ One command via the [Vercel Labs Skills CLI](https://github.com/vercel-labs/skil
 npx skills add justgetAI/agent-skills --skill "context-engineering"
 npx skills add justgetAI/agent-skills --skill "marketing-copy"
 npx skills add justgetAI/agent-skills --skill "orchestrating-swarms"
+npx skills add justgetAI/agent-skills --skill "prompt-engineering"
 ```
 
 List all available skills:
@@ -38,6 +40,7 @@ claude plugin marketplace add justgetAI/agent-skills
 claude plugin install context-engineering@justgetai-tools
 claude plugin install marketing-copy@justgetai-tools
 claude plugin install orchestrating-swarms@justgetai-tools
+claude plugin install prompt-engineering@justgetai-tools
 ```
 
 ### Other Tools (Cursor, Gemini CLI, etc.)

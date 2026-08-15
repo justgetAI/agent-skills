@@ -32,6 +32,14 @@
       "version": "1.0.0",
       "category": "workflow",
       "tags": ["swarm", "multi-agent", "orchestration", "teammatetool", "tasks"]
+    },
+    {
+      "name": "prompt-engineering",
+      "source": "./prompt-engineering",
+      "description": "Write and improve prompts — the intersection of the five major prompt engineering guides, as one operational checklist",
+      "version": "1.0.0",
+      "category": "writing",
+      "tags": ["prompt", "prompt-engineering", "few-shot", "chain-of-thought", "rag", "evals"]
     }
   ]
 }
