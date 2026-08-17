@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.2.0] - 2026-08-17
+
+### Added
+- **finding-verifier** agent — adversarial verification stage in `/lets-ship` (Phase 4.4) and `/review` (Phase 3), modeled on liatrio-labs/claude-code-gauntlet's blind challenge. Every Must/Should Fix finding is handed to a skeptic as a bare claim — no reviewer reasoning — which must rediscover evidence from the code. CONFIRMED kept, DISPROVEN dropped, UNVERIFIABLE demoted to Consider. `--auto` fix iterations now run only on CONFIRMED findings. Anti-slop LINT-mode findings skip verification (deterministic).
+
 ## [3.1.0] - 2026-08-17
 
 ### Added

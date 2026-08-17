@@ -177,9 +177,21 @@ Update your task with ## Findings when done. SendMessage to lead with summary.`,
 
 ---
 
-## Phase 3: Consolidate Feedback
+## Phase 3: Verify Findings (blind challenge)
 
-Wait for all reviewers to report back via SendMessage. Then present:
+Reviewer findings are candidates, not conclusions. Every finding that would land as **Must Fix** or **Should Fix** gets an adversarial verification pass before you present it.
+
+Spawn one `context-engineering:finding-verifier` per Must Fix finding (parallel; batch the Should Fix findings into one verifier). Give each verifier the claim ONLY — file, location, one-sentence defect statement — and **strip the reviewer's reasoning**: a real defect must be rediscoverable from the code alone.
+
+Verdicts: `CONFIRMED` keep (attach the verifier's independent evidence) · `DISPROVEN` drop and record why · `UNVERIFIABLE` demote to Consider.
+
+Skip verification for anti-slop LINT-mode findings (oxlint output is deterministic evidence) and Consider-tier items. Never present an unverified Must Fix.
+
+---
+
+## Phase 4: Consolidate Feedback
+
+Wait for all reviewers and verifiers. Then present:
 
 ```markdown
 ## Review Summary
@@ -200,8 +212,10 @@ Wait for all reviewers to report back via SendMessage. Then present:
 
 ## Recommended Actions
 
-### Must Fix (blocking)
-1. [Critical issue]
+(N raw findings — X confirmed, Y disproven/dropped, Z demoted)
+
+### Must Fix (blocking, all CONFIRMED)
+1. [Critical issue — verifier evidence: file:line]
 
 ### Should Fix (recommended)
 1. [Important improvement]
@@ -215,7 +229,7 @@ Wait for all reviewers to report back via SendMessage. Then present:
 
 ---
 
-## Phase 4: Decision Gate
+## Phase 5: Decision Gate
 
 **"Review complete. What would you like to do?"**
 

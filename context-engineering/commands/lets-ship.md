@@ -358,17 +358,51 @@ Task({
 
 **Skip the anti-slop reviewer** when `$changed_files` has no `.ts/.tsx/.js/.jsx/.mts/.cts/.mjs/.cjs` files. If it reports HEURISTIC mode repeatedly across features, suggest the `anti-slop` plugin's `/install-anti-slop` skill to make it deterministic.
 
-### 4.3 Consolidate & Present
+### 4.4 Verify Findings (blind challenge)
+
+Reviewer findings are candidates, not conclusions. Before presenting, every **Must Fix** and **Should Fix** finding must survive an adversarial verification pass.
+
+For each finding, spawn a verifier with the claim ONLY — file, location, one-sentence defect statement. **Strip the reviewer's reasoning and evidence** from the prompt; if the defect is real, a fresh agent must be able to rediscover it from the code.
+
+```javascript
+// One verifier per Must Fix finding (parallel). Batch all Should Fix findings into one verifier.
+Task({
+  team_name: current_team,
+  name: `verify-${finding_id}`,
+  subagent_type: "context-engineering:finding-verifier",
+  description: `Verify: ${finding_summary}`,
+  prompt: `Attempt to DISPROVE this review finding. Claim only — no reviewer reasoning provided:
+
+File: ${finding_file}
+Claim: ${finding_one_sentence}
+
+Read the actual code and verdict CONFIRMED / DISPROVEN / UNVERIFIABLE with evidence. Update your task with findings. SendMessage to lead.`,
+  model: "sonnet"
+})
+```
+
+Apply verdicts before presenting:
+- `CONFIRMED` — keep, attach the verifier's independent evidence
+- `DISPROVEN` — drop; record in the review task as `Dropped (disproven): <claim> — <evidence>`
+- `UNVERIFIABLE` — demote to Consider
+
+Skip verification for: anti-slop LINT-mode findings (deterministic — oxlint output is its own evidence) and Consider-tier items. Anti-slop HEURISTIC findings that would land as Should Fix are verified like any other.
+
+**Never present an unverified Must Fix.** In `--auto` mode this gate is what makes auto-fixing safe: fix iterations only run on CONFIRMED findings.
+
+### 4.5 Consolidate & Present
 
 Wait for all reviewers. Present consolidated feedback (lead the summary with `Reviewed <current> against <base> — N files`):
 
 ```markdown
 ## Review Summary
 
-### Must Fix (blocking)
-1. [Critical issue]
+(N raw findings — X confirmed, Y disproven/dropped, Z demoted)
 
-### Should Fix (recommended)
+### Must Fix (blocking, all CONFIRMED)
+1. [Critical issue — verifier evidence: file:line]
+
+### Should Fix (recommended, all CONFIRMED)
 1. [Important improvement]
 
 ### Consider (optional)
@@ -378,9 +412,9 @@ Wait for all reviewers. Present consolidated feedback (lead the summary with `Re
 1. [file:line — rule — fix]
 ```
 
-### 4.4 Gate: Review Decision
+### 4.6 Gate: Review Decision
 
-Options (with `--auto`: auto-fix Must Fix items, max 2 iterations — anti-slop findings are advisory and never trigger a fix iteration):
+Options (with `--auto`: auto-fix CONFIRMED Must Fix items, max 2 iterations — anti-slop findings are advisory and never trigger a fix iteration):
 
 1. **Fix issues** — address feedback, re-run review
 2. **Ship as-is** — proceed to compound
@@ -465,7 +499,7 @@ Mark Phase 5 task complete.
 | Understand | repo-researcher, learnings-researcher | Confirm context |
 | Plan | (optional) options-researcher | Approve plan |
 | Work | — | Ready for review |
-| Review | simplicity-reviewer, spec-reviewer, bug-hunter, anti-slop-reviewer | Fix / ship |
+| Review | simplicity-reviewer, spec-reviewer, bug-hunter, anti-slop-reviewer, finding-verifier(s) | Fix / ship |
 | Compound | — | Create PR / done |
 
 ## Flags

@@ -118,6 +118,7 @@ Every team member agent MUST:
 | spec-reviewer | Check spec compliance | Team member |
 | bug-hunter | Hunt for bugs and security issues | Team member |
 | anti-slop-reviewer | Flag low-evidence TS/JS type patterns (advisory) | Team member |
+| finding-verifier | Blind-challenge review findings before they're presented | Team member |
 | context-worker | Execute implementation tasks | Team member |
 
 ---

@@ -66,6 +66,7 @@ Spawned as **team members** with persistent task traces:
 | `spec-reviewer` | Verify spec compliance and completeness |
 | `bug-hunter` | Hunt for bugs, edge cases, security issues |
 | `anti-slop-reviewer` | Flag low-evidence TS/JS type patterns (advisory) |
+| `finding-verifier` | Blind-challenge review findings — disprove or confirm with evidence |
 | `context-worker` | Context-aware implementation agent |
 
 ## Directory Structure
