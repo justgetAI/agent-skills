@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.1.0] - 2026-08-17
+
+### Added
+- **anti-slop** plugin — Oxlint rules that reject low-evidence TypeScript/JavaScript patterns, vendored from [dmmulroy/anti-slop](https://github.com/dmmulroy/anti-slop) (MIT)
+  - `install-anti-slop` skill: copies the plugin to `tools/oxlint/anti-slop/`, installs current `oxlint` + `@oxlint/plugins`, merges lint config, enables all 15 rules
+- **context-engineering** `anti-slop-reviewer` agent — 4th reviewer in `/lets-ship` Phase 4 and `/review`
+  - Lint mode when anti-slop is installed, heuristic mode against the 15 rules when it isn't, skipped when the diff has no TS/JS
+  - Findings are **advisory** — never blocking, never a `--auto` fix iteration
+
+### Fixed
+- Reviewers no longer diff against a hardcoded `main`. `/lets-ship` Phase 4 and `/review` now resolve the review base for a `feature — dev — main` flow: feature branches review against `dev`, `dev` reviews against the default branch, `CE_REVIEW_BASE` overrides. Previously a repo without a local `main` produced `fatal: ambiguous argument` — reviewers got an empty file list and reported "clean" on unreviewed code.
+- Reviewers receive `$changed_files` and `$base` from the lead instead of re-deriving scope, so all four review the same code.
+- New `references/review-base.md` documents the snippet and its verified behaviour.
+
+### Changed
+- Marketplace 3.0.0 —> 3.1.0; context-engineering 3.0.0 —> 3.1.0
+
 ## [2.2.0] - 2026-02-06
 
 ### Added

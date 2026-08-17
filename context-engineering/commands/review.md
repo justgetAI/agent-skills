@@ -14,22 +14,43 @@ Get feedback from multiple perspectives before shipping. Reviewers are spawned a
 
 **If spec provided:** Review against spec acceptance criteria
 
-**If empty:** Review current branch changes:
-```bash
-git diff $(git merge-base HEAD main)..HEAD --name-only
-```
+**If empty:** Review current branch changes against the resolved review base (see Phase 1).
 
 ---
 
 ## Phase 1: Gather Changes
 
 ```bash
-# Get list of changed files
-changed_files=$(git diff --name-only main...HEAD)
+# Resolve the review base — see references/review-base.md
+current=$(git branch --show-current)
+default=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+default=${default:-main}
 
-# Get the actual diff
-git diff main...HEAD
+if git rev-parse --verify -q origin/dev >/dev/null || git rev-parse --verify -q dev >/dev/null; then
+  base=dev
+else
+  base=$default
+fi
+
+if [ "$base" = "$current" ]; then
+  for candidate in "$default" main master; do
+    [ "$candidate" = "$current" ] && continue
+    if git rev-parse --verify -q "origin/$candidate" >/dev/null || git rev-parse --verify -q "$candidate" >/dev/null; then
+      base=$candidate
+      break
+    fi
+  done
+fi
+
+git rev-parse --verify -q "origin/$base" >/dev/null && base="origin/$base"
+base=${CE_REVIEW_BASE:-$base}
+
+merge_base=$(git merge-base HEAD "$base")
+changed_files=$(git diff --name-only "$merge_base"..HEAD)
+diff_content=$(git diff "$merge_base"..HEAD)
 ```
+
+Announce `Reviewing <current> against <base> (N files)` before spawning. If `changed_files` is empty, stop and ask — do not run reviewers on an empty diff.
 
 Read the spec if available for context.
 
@@ -62,6 +83,11 @@ TaskCreate({
 TaskCreate({
   subject: "Review: bug hunting",
   description: "Hunt for edge cases, error handling gaps, race conditions, security issues"
+})
+
+TaskCreate({
+  subject: "Review: anti-slop",
+  description: "Check changed TS/JS for low-evidence type patterns (advisory only)"
 })
 ```
 
@@ -130,6 +156,23 @@ Be paranoid. Reference specific code.
 Update your task with ## Findings when done. SendMessage to lead with summary.`,
   model: "sonnet"
 })
+
+// Only spawn when the diff touches .ts/.tsx/.js/.jsx/.mts/.cts/.mjs/.cjs
+Task({
+  team_name: current_team,
+  name: "anti-slop-reviewer",
+  subagent_type: "context-engineering:anti-slop-reviewer",
+  description: "Anti-slop review",
+  prompt: `Review changed TS/JS for low-evidence type patterns:
+
+Changed files: ${changed_files}
+
+Run oxlint if the repo has anti-slop installed; otherwise judge the diff heuristically against the anti-slop rules.
+
+Findings are ADVISORY — they never block the ship gate. Never propose disabling a rule, downgrading severity, or casting to make lint pass.
+Update your task with ## Findings when done. SendMessage to lead with summary.`,
+  model: "sonnet"
+})
 ```
 
 ---
@@ -150,6 +193,9 @@ Wait for all reviewers to report back via SendMessage. Then present:
 ### Bug Hunter
 [Findings or "No issues found"]
 
+### Anti-Slop (advisory)
+[Mode: LINT/HEURISTIC/SKIPPED — findings or "Clean"]
+
 ---
 
 ## Recommended Actions
@@ -162,6 +208,9 @@ Wait for all reviewers to report back via SendMessage. Then present:
 
 ### Consider (optional)
 1. [Nice to have]
+
+### Anti-Slop (advisory — never blocking)
+1. [file:line — rule — fix]
 ```
 
 ---
@@ -186,6 +235,7 @@ After decision:
 SendMessage({ type: "shutdown_request", recipient: "simplicity-reviewer" })
 SendMessage({ type: "shutdown_request", recipient: "spec-reviewer" })
 SendMessage({ type: "shutdown_request", recipient: "bug-hunter" })
+SendMessage({ type: "shutdown_request", recipient: "anti-slop-reviewer" })
 ```
 
 Review tasks with ## Findings persist as trace.

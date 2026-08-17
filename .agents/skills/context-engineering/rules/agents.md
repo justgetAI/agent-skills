@@ -56,7 +56,7 @@ Persistent, traceable work. Findings stored in team task history.
 ### When to Use
 
 - Research that informs decisions (repo-researcher, learnings-researcher)
-- Reviews that produce actionable findings (simplicity-reviewer, spec-reviewer, bug-hunter)
+- Reviews that produce actionable findings (simplicity-reviewer, spec-reviewer, bug-hunter, anti-slop-reviewer)
 - Implementation tasks during `/work`
 - Any output you'd want to query later via `/status --teams`
 
@@ -117,6 +117,7 @@ Every team member agent MUST:
 | simplicity-reviewer | Challenge complexity | Team member |
 | spec-reviewer | Check spec compliance | Team member |
 | bug-hunter | Hunt for bugs and security issues | Team member |
+| anti-slop-reviewer | Flag low-evidence TS/JS type patterns (advisory) | Team member |
 | context-worker | Execute implementation tasks | Team member |
 
 ---

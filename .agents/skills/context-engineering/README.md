@@ -65,6 +65,7 @@ Spawned as **team members** with persistent task traces:
 | `simplicity-reviewer` | Challenge complexity, find simpler alternatives |
 | `spec-reviewer` | Verify spec compliance and completeness |
 | `bug-hunter` | Hunt for bugs, edge cases, security issues |
+| `anti-slop-reviewer` | Flag low-evidence TS/JS type patterns (advisory) |
 | `context-worker` | Context-aware implementation agent |
 
 ## Directory Structure

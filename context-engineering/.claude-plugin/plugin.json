@@ -1,12 +1,21 @@
 {
   "name": "context-engineering",
   "description": "Ship features with full traceability — specs, multi-agent review, native Teams integration, autonomous mode",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "author": {
     "name": "justgetAI"
   },
   "homepage": "https://github.com/justgetAI/agent-skills",
   "repository": "https://github.com/justgetAI/agent-skills",
   "license": "MIT",
-  "keywords": ["context", "specs", "tasks", "teams", "traceability", "multi-agent", "review", "autonomous"]
+  "keywords": [
+    "context",
+    "specs",
+    "tasks",
+    "teams",
+    "traceability",
+    "multi-agent",
+    "review",
+    "autonomous"
+  ]
 }

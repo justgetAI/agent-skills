@@ -267,9 +267,36 @@ Mark Phase 3 task complete. Unblocks Phase 4.
 ### 4.1 Gather Changes
 
 ```bash
-changed_files=$(git diff --name-only main...HEAD)
-diff_content=$(git diff main...HEAD)
+# Resolve the review base — see references/review-base.md
+current=$(git branch --show-current)
+default=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+default=${default:-main}
+
+if git rev-parse --verify -q origin/dev >/dev/null || git rev-parse --verify -q dev >/dev/null; then
+  base=dev
+else
+  base=$default
+fi
+
+if [ "$base" = "$current" ]; then
+  for candidate in "$default" main master; do
+    [ "$candidate" = "$current" ] && continue
+    if git rev-parse --verify -q "origin/$candidate" >/dev/null || git rev-parse --verify -q "$candidate" >/dev/null; then
+      base=$candidate
+      break
+    fi
+  done
+fi
+
+git rev-parse --verify -q "origin/$base" >/dev/null && base="origin/$base"
+base=${CE_REVIEW_BASE:-$base}
+
+merge_base=$(git merge-base HEAD "$base")
+changed_files=$(git diff --name-only "$merge_base"..HEAD)
+diff_content=$(git diff "$merge_base"..HEAD)
 ```
+
+Announce `Reviewing <current> against <base> (N files)` before spawning. If `changed_files` is empty, stop and ask — do not run reviewers on an empty diff.
 
 ### 4.2 Spawn Reviewer Team Members
 
@@ -289,13 +316,18 @@ TaskCreate({
   description: "Hunt for edge cases, error handling gaps, security issues"
 })
 
+TaskCreate({
+  subject: "Review: anti-slop",
+  description: "Check changed TS/JS for low-evidence type patterns (advisory only)"
+})
+
 // Spawn as team members (traced)
 Task({
   team_name: current_team,
   name: "simplicity-reviewer",
   subagent_type: "context-engineering:simplicity-reviewer",
   description: "Simplicity review",
-  prompt: "Review changes for unnecessary complexity. Update your task with findings. SendMessage to lead."
+  prompt: "Scope: ${changed_files} (base: ${base}). Review changes for unnecessary complexity. Update your task with findings. SendMessage to lead."
 })
 
 Task({
@@ -303,7 +335,7 @@ Task({
   name: "spec-reviewer",
   subagent_type: "context-engineering:spec-reviewer",
   description: "Spec compliance review",
-  prompt: "Compare implementation against spec. Update your task with findings. SendMessage to lead."
+  prompt: "Scope: ${changed_files} (base: ${base}). Compare implementation against spec. Update your task with findings. SendMessage to lead."
 })
 
 Task({
@@ -311,13 +343,24 @@ Task({
   name: "bug-hunter",
   subagent_type: "context-engineering:bug-hunter",
   description: "Bug hunting review",
-  prompt: "Hunt for bugs, edge cases, security issues. Update your task with findings. SendMessage to lead."
+  prompt: "Scope: ${changed_files} (base: ${base}). Hunt for bugs, edge cases, security issues. Update your task with findings. SendMessage to lead."
+})
+
+// Anti-slop: only if the diff touches TS/JS
+Task({
+  team_name: current_team,
+  name: "anti-slop-reviewer",
+  subagent_type: "context-engineering:anti-slop-reviewer",
+  description: "Anti-slop review",
+  prompt: "Scope: ${changed_files} (base: ${base}). Review changed TS/JS for low-evidence type patterns. Run oxlint if anti-slop is installed, otherwise judge heuristically. Findings are ADVISORY — never blocking. Update your task with findings. SendMessage to lead."
 })
 ```
 
+**Skip the anti-slop reviewer** when `$changed_files` has no `.ts/.tsx/.js/.jsx/.mts/.cts/.mjs/.cjs` files. If it reports HEURISTIC mode repeatedly across features, suggest the `anti-slop` plugin's `/install-anti-slop` skill to make it deterministic.
+
 ### 4.3 Consolidate & Present
 
-Wait for all reviewers. Present consolidated feedback:
+Wait for all reviewers. Present consolidated feedback (lead the summary with `Reviewed <current> against <base> — N files`):
 
 ```markdown
 ## Review Summary
@@ -330,11 +373,14 @@ Wait for all reviewers. Present consolidated feedback:
 
 ### Consider (optional)
 1. [Nice to have]
+
+### Anti-Slop (advisory — never blocking)
+1. [file:line — rule — fix]
 ```
 
 ### 4.4 Gate: Review Decision
 
-Options (with `--auto`: auto-fix Must Fix items, max 2 iterations):
+Options (with `--auto`: auto-fix Must Fix items, max 2 iterations — anti-slop findings are advisory and never trigger a fix iteration):
 
 1. **Fix issues** — address feedback, re-run review
 2. **Ship as-is** — proceed to compound
@@ -419,7 +465,7 @@ Mark Phase 5 task complete.
 | Understand | repo-researcher, learnings-researcher | Confirm context |
 | Plan | (optional) options-researcher | Approve plan |
 | Work | — | Ready for review |
-| Review | simplicity-reviewer, spec-reviewer, bug-hunter | Fix / ship |
+| Review | simplicity-reviewer, spec-reviewer, bug-hunter, anti-slop-reviewer | Fix / ship |
 | Compound | — | Create PR / done |
 
 ## Flags

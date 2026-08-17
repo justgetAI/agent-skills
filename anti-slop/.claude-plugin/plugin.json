@@ -1,0 +1,10 @@
+{
+  "name": "anti-slop",
+  "description": "Opinionated Oxlint rules that reject low-evidence TypeScript/JavaScript patterns — vendored from dmmulroy/anti-slop",
+  "version": "1.0.0",
+  "author": { "name": "justgetAI" },
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT",
+  "keywords": ["lint", "oxlint", "typescript", "code-quality", "review", "anti-slop"]
+}

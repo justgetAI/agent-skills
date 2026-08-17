@@ -6,16 +6,40 @@
   },
   "metadata": {
     "description": "AI coding agent tools by justgetAI",
-    "version": "3.0.0"
+    "version": "3.1.0"
   },
   "plugins": [
     {
       "name": "context-engineering",
       "source": "./context-engineering",
       "description": "Ship features with full traceability — specs, multi-agent review, native Teams integration, autonomous mode",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "category": "workflow",
-      "tags": ["context", "specs", "tasks", "teams", "traceability", "multi-agent", "review", "autonomous"]
+      "tags": [
+        "context",
+        "specs",
+        "tasks",
+        "teams",
+        "traceability",
+        "multi-agent",
+        "review",
+        "autonomous"
+      ]
+    },
+    {
+      "name": "anti-slop",
+      "source": "./anti-slop",
+      "description": "Opinionated Oxlint rules that reject low-evidence TypeScript/JavaScript patterns — vendored from dmmulroy/anti-slop",
+      "version": "1.0.0",
+      "category": "quality",
+      "tags": [
+        "lint",
+        "oxlint",
+        "typescript",
+        "code-quality",
+        "review",
+        "anti-slop"
+      ]
     },
     {
       "name": "marketing-copy",
@@ -23,7 +47,12 @@
       "description": "Write compelling marketing copy with Jason Fried clarity + Made to Stick principles",
       "version": "1.0.0",
       "category": "writing",
-      "tags": ["marketing", "copywriting", "landing-pages", "headlines"]
+      "tags": [
+        "marketing",
+        "copywriting",
+        "landing-pages",
+        "headlines"
+      ]
     },
     {
       "name": "orchestrating-swarms",
@@ -31,7 +60,13 @@
       "description": "Multi-agent orchestration using Claude Code's TeammateTool and Task system",
       "version": "1.0.0",
       "category": "workflow",
-      "tags": ["swarm", "multi-agent", "orchestration", "teammatetool", "tasks"]
+      "tags": [
+        "swarm",
+        "multi-agent",
+        "orchestration",
+        "teammatetool",
+        "tasks"
+      ]
     },
     {
       "name": "prompt-engineering",
@@ -39,7 +74,14 @@
       "description": "Write and improve prompts — the intersection of the five major prompt engineering guides, as one operational checklist",
       "version": "1.0.0",
       "category": "writing",
-      "tags": ["prompt", "prompt-engineering", "few-shot", "chain-of-thought", "rag", "evals"]
+      "tags": [
+        "prompt",
+        "prompt-engineering",
+        "few-shot",
+        "chain-of-thought",
+        "rag",
+        "evals"
+      ]
     }
   ]
 }

@@ -8,6 +8,7 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 
 | Skill | Description |
 |-------|-------------|
+| [anti-slop](./anti-slop/) | Opinionated Oxlint rules that reject low-evidence TypeScript/JavaScript patterns |
 | [context-engineering](./context-engineering/) | Ship features with full traceability — specs, tasks, multi-agent review, native Teams |
 | [marketing-copy](./marketing-copy/) | Write compelling marketing copy with Jason Fried clarity + Made to Stick principles |
 | [orchestrating-swarms](./orchestrating-swarms/) | Multi-agent orchestration using Claude Code's TeammateTool and Task system |
@@ -20,6 +21,7 @@ Follows the [Agent Skills](https://agentskills.io/) open format.
 One command via the [Vercel Labs Skills CLI](https://github.com/vercel-labs/skills):
 
 ```bash
+npx skills add justgetAI/agent-skills --skill "install-anti-slop"
 npx skills add justgetAI/agent-skills --skill "context-engineering"
 npx skills add justgetAI/agent-skills --skill "marketing-copy"
 npx skills add justgetAI/agent-skills --skill "orchestrating-swarms"
