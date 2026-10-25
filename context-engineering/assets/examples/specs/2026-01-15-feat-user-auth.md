@@ -1,4 +1,4 @@
-# feat001: user-auth
+# feat: user-auth
 
 Linear: N/A
 

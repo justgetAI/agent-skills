@@ -32,7 +32,7 @@ Run two researchers in parallel:
 | Agent | Purpose |
 |-------|---------|
 | [repo-researcher](../agents/repo-researcher.md) | Find existing patterns, conventions, related code |
-| [learnings-researcher](../agents/learnings-researcher.md) | Surface past learnings and anti-patterns |
+| [learnings-researcher](../agents/learnings-researcher.md) | Surface past solutions from docs/solutions/ + foundation |
 
 ```
 ┌─────────────────┐     ┌─────────────────┐
@@ -195,7 +195,7 @@ ctx plan "feature idea"
 ctx research "feature keywords"
 
 # Review spec
-ctx review specs/feat001-feature.md
+ctx review specs/2026-01-26-feat-stripe-payments.md
 ```
 
 ---
@@ -212,13 +212,13 @@ Human: "We need Stripe payments"
 
 2. Research (parallel):
    - repo-researcher: Found existing Payment interface
-   - learnings-researcher: "Use idempotency keys" from past issue
+   - learnings-researcher: "Use idempotency keys" from docs/solutions/
 
 3. Decision: Need Stripe docs (new integration)
 
 4. External research: Stripe Payment Intents API
 
-5. Spec draft: feat001-stripe-payments.md
+5. Spec draft: 2026-01-26-feat-stripe-payments.md
 
 6. Review:
    - spec-reviewer: APPROVED (clear, complete)

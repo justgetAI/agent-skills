@@ -29,7 +29,8 @@ Spawn a sub-agent to load context:
 
 ### When creating tasks
 - Use templates from skill references
-- Naming: `{type}{###}-task{###}-{name}.md`
+- Specs: `YYYY-MM-DD-<type>-<name>.md`
+- Tasks: `YYYY-MM-DD-<type>-<name>-task{###}-<task-name>.md`
 - Update status as you work
 
 ### Foundation is read-only

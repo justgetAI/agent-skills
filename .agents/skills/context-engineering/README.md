@@ -49,6 +49,7 @@ That's it. `lets-ship` handles everything: bootstraps `context/` if needed, spaw
 | `/work` | Execute current spec task-by-task |
 | `/review` | Multi-agent code review (simplicity + spec + bugs) |
 | `/compound` | Capture learnings + rate spec quality |
+| `/compound-refresh` | Audit `docs/solutions/` for stale/overlap (design stub) |
 | `/status` | Progress overview, spec listing, team history |
 | `/deepen` | Enhance spec with parallel research |
 | `/audit` | Audit codebase docs via hierarchical swarm |
@@ -60,7 +61,7 @@ Spawned as **team members** with persistent task traces:
 | Agent | Role |
 |-------|------|
 | `repo-researcher` | Find codebase patterns and conventions |
-| `learnings-researcher` | Surface past solutions and anti-patterns |
+| `learnings-researcher` | Surface past solutions (`docs/solutions/`) + foundation |
 | `options-researcher` | Research approaches with trade-off analysis |
 | `simplicity-reviewer` | Challenge complexity, find simpler alternatives |
 | `spec-reviewer` | Verify spec compliance and completeness |

@@ -38,13 +38,13 @@ Be concise. Skip boilerplate.
 | After long idle | Refresh from Claude Code Tasks |
 | Spec completed | Clear spec context, reload foundation |
 
-## Example: Loading feat001
+## Example: Loading 2026-01-26-feat-payments
 
 ```bash
 # Agent reads DEFINITIONS:
-context/foundation/*.md           # All foundation docs
-context/specs/feat001-payments.md # Active spec
-context/tasks/feat001-task*.md    # Task definitions
+context/foundation/*.md                      # All foundation docs
+context/specs/2026-01-26-feat-payments.md    # Active spec
+context/tasks/2026-01-26-feat-payments-task*.md  # Task definitions
 
 # Agent reads STATE from native Tasks:
 TaskList()                        # Current statuses, blockers
@@ -58,7 +58,7 @@ TaskList()                        # Current statuses, blockers
 - Key fact 1
 - Key fact 2
 
-## Active Spec: feat001-payments
+## Active Spec: 2026-01-26-feat-payments
 Goal: Implement Stripe payment processing
 
 ## Tasks (state from Claude Code Tasks)

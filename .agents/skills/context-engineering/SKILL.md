@@ -51,6 +51,7 @@ Skips all gates. Auto-fixes review issues (max 2 iterations). Auto-creates PR.
 | [work](commands/work.md) | Execute spec task-by-task | — |
 | [review](commands/review.md) | Multi-perspective code review | simplicity, spec, bug-hunter |
 | [compound](commands/compound.md) | Capture learnings + rate spec | — |
+| [compound-refresh](commands/compound-refresh.md) | Audit `docs/solutions/` for stale/overlap (design stub) | — |
 | [status](commands/status.md) | Progress, specs, team history | — |
 | [deepen](commands/deepen.md) | Research to improve spec | options |
 | [audit](commands/audit.md) | Audit codebase docs, generate specs | hierarchical swarm |
@@ -66,9 +67,9 @@ context/
 │   ├── conventions.md
 │   └── gotchas.md
 ├── specs/         # Feature/fix/improve definitions
-│   └── 2026-01-26-feat-payments.md
+│   └── 2026-01-26-feat-payments.md   # YYYY-MM-DD-<type>-<name>.md
 └── tasks/         # (Optional) Atomic task breakdowns
-    └── feat001-task001-setup.md
+    └── 2026-01-26-feat-payments-task001-setup.md
 
 docs/
 └── solutions/     # Captured learnings from /compound

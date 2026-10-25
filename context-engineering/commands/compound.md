@@ -218,5 +218,5 @@ Learnings and ratings persist in the team trace.
 
 Make it a habit:
 1. Finish feature → spend 5 min on `/compound`
-2. Weekly: review `docs/solutions/`, clean up or consolidate
+2. Weekly: run `/compound-refresh` (or manually review `docs/solutions/` for stale/overlap)
 3. Monthly: review `context/foundation/`, update outdated info

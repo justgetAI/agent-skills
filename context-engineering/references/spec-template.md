@@ -1,4 +1,4 @@
-# {type}{###}: {name}
+# {type}: {name}
 
 Linear: {link or N/A}
 

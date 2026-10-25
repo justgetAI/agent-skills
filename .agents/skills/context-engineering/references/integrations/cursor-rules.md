@@ -19,7 +19,8 @@ On session start:
 - Read that spec + its tasks from context/tasks/
 
 When creating tasks:
-- Use naming: {type}{###}-task{###}-{name}.md
+- Specs: YYYY-MM-DD-<type>-<name>.md
+- Tasks: YYYY-MM-DD-<type>-<name>-task{###}-<task-name>.md
 - Status options: todo | in-progress | done | blocked
 - Update status as you work
 

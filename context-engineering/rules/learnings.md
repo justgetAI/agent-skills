@@ -8,33 +8,33 @@ Capture learnings after work completes. Make future work easier.
 
 When you solve a non-trivial problem, document it so the next person (or agent) doesn't repeat the journey.
 
-## Directory Structure
+## Where Learnings Live
+
+`/compound` is the writer. Search what it actually writes:
 
 ```
-context/
-├── learnings/        # Solved problems, patterns discovered
-│   ├── stripe-idempotency.md
-│   ├── react-query-patterns.md
-│   └── supabase-rls-gotchas.md
-└── anti-patterns/    # What NOT to do
-    ├── nested-callbacks.md
-    └── god-objects.md
+docs/solutions/              # Dated solution write-ups (primary)
+└── YYYY-MM-DD-<topic>.md
+
+context/foundation/          # Durable project knowledge
+├── gotchas.md               # Warnings / pitfalls
+├── workflows.md             # Useful commands & flows
+└── conventions.md           # Project conventions
 ```
 
-## Learning Format
+See `/compound` Phase 2 for the routing table (convention → foundation, solution → `docs/solutions/`, etc.).
+
+## Solution Format
 
 ```markdown
 ---
 title: [Clear title]
 date: 2026-01-22
-source: [feat001 | fix002 | discovery]
+source: [2026-01-22-feat-payments | discovery]
 tags: [api, payments, performance]
 ---
 
 # [Title]
-
-## Context
-[When this applies]
 
 ## Problem
 [What went wrong / was confusing]
@@ -51,69 +51,35 @@ tags: [api, payments, performance]
 [One-liner to remember]
 ```
 
-## Anti-Pattern Format
-
-```markdown
----
-title: [Don't do X]
-severity: HIGH | MEDIUM | LOW
-date: 2026-01-22
----
-
-# Don't: [Anti-pattern name]
-
-## The Temptation
-[Why this seems like a good idea]
-
-## The Problem
-[What actually happens]
-
-## Instead, Do This
-[The correct approach]
-
-## Example
-\`\`\`typescript
-// ❌ Bad
-[bad code]
-
-// ✅ Good
-[good code]
-\`\`\`
-```
-
 ## When to Document
 
 | Signal | Action |
 |--------|--------|
-| Took >1 hour to figure out | Document as learning |
-| Made the same mistake twice | Document as anti-pattern |
-| Found undocumented gotcha | Document as learning |
-| Discovered better pattern | Document as learning |
-| Spec rated ≤3 | Extract learning from failure |
+| Took >1 hour to figure out | Write a `docs/solutions/` entry |
+| Made the same mistake twice | Add to `context/foundation/gotchas.md` |
+| Found undocumented gotcha | Foundation gotchas or a solution doc |
+| Discovered better pattern | Solution doc + conventions if durable |
+| Spec rated ≤3 | Extract learning from failure via `/compound` |
 
 ## Workflow Integration
 
 After completing a spec:
 
-1. Review what was learned
-2. Check if it's already documented
-3. If novel, create learning/anti-pattern
-4. Link back to source spec
-
-```bash
-# Add learning
-ctx learn "Stripe requires idempotency keys for retries"
-
-# Add anti-pattern  
-ctx anti-pattern "Don't nest more than 2 callbacks"
-```
+1. Run `/compound` (or `/lets-ship` Phase 5)
+2. Check whether the lesson is already documented
+3. If novel, write the solution / foundation update
+4. Link back to the source spec when useful
 
 ## Retrieval
 
-Learnings are automatically searched during planning:
+Learnings are searched during planning:
 
 ```
-ctx plan "new feature" 
-  → learnings-researcher scans context/learnings/
+/lets-ship or /spec
+  → learnings-researcher scans docs/solutions/ + context/foundation/
   → Surfaces relevant past solutions
 ```
+
+## Legacy dirs
+
+`context/learnings/` and `context/anti-patterns/` are **not** written by `/compound`. Do not advertise them as the store. If present in an old repo, read-only fallback only — see [structure.md](structure.md).
