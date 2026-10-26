@@ -39,9 +39,10 @@ todo → in-progress → done
 
 ## Naming conventions
 
-- Specs: {type}{###}-{name}.md (feat001, fix002, improve003)
-- Tasks: {type}{###}-task{###}-{name}.md
-- Edge cases: misc-task{###}-{name}.md
+- Specs: `YYYY-MM-DD-<type>-<name>.md` (e.g. `2026-01-26-feat-payments.md`)
+- Tasks: `YYYY-MM-DD-<type>-<name>-task{###}-<task-name>.md`
+- Edge cases: `misc-task{###}-{name}.md`
+- Legacy numbered specs (`feat001-…`) may still exist — read them; do not create new ones
 
 ## Team Integration
 

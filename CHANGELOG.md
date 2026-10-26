@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Fixed
+- **context-engineering** spec naming drift — standardize on date-named `YYYY-MM-DD-<type>-<name>.md` (already used by `/lets-ship`, `/spec`, `/compound`) across `rules/naming.md`, examples, templates, and `scripts/ctx`. `ctx list` / `ctx feedback` / `ctx new task` discover date-named specs; legacy `feat001`/`fix001`/`improve001` forms still resolve.
+- **learnings-researcher** now searches `docs/solutions/` and `context/foundation/` (gotchas/workflows/conventions) — the paths `/compound` actually writes — instead of empty `context/learnings/` and `context/anti-patterns/`.
+
+### Changed
+- `rules/structure.md` and `rules/learnings.md` mark `context/learnings/` and `context/anti-patterns/` as legacy/unused.
+- `scripts/init.sh` also scaffolds `docs/solutions/`.
+- `/audit` generates date-named feat specs.
+
+### Added
+- `commands/compound-refresh.md` — design stub for auditing `docs/solutions/` (Keep / Update / Consolidate / Replace / Delete), inspired by EveryInc `/ce-compound-refresh`.
+
 ## [3.2.0] - 2026-08-17
 
 ### Added

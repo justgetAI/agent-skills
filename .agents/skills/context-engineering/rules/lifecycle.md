@@ -43,13 +43,13 @@ Use Claude Code Tasks commands (not file edits):
 
 ```
 # Mark task in-progress
-Task feat001-task001: starting
+Task 2026-01-26-feat-payments-task001: starting
 
 # Mark blocked
-Task feat001-task001: blocked - waiting for Stripe webhook secret
+Task 2026-01-26-feat-payments-task001: blocked - waiting for Stripe webhook secret
 
 # Mark done
-Task feat001-task001: done
+Task 2026-01-26-feat-payments-task001: done
 ```
 
 ## Task File Content (Definition Only)
@@ -57,7 +57,7 @@ Task feat001-task001: done
 Task files contain **what** to do, not **status**:
 
 ```markdown
-# feat001-task001: Stripe Integration
+# 2026-01-26-feat-payments-task001: Stripe Integration
 
 ## Goal
 Implement payment processing with Stripe.

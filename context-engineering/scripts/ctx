@@ -3,7 +3,7 @@
 # Quick spec/task creation and listing
 #
 # Usage:
-#   ctx new spec <type> <name>     Create new spec
+#   ctx new spec <type> <name>     Create new spec (date-named)
 #   ctx new task <spec> <name>     Create new task for spec
 #   ctx list specs                 List all specs
 #   ctx list tasks [spec]          List tasks (optionally filtered)
@@ -27,32 +27,100 @@ show_help() {
     echo ""
     echo "Usage:"
     echo "  ctx new spec <type> <name>     Create new spec (type: feat|fix|improve)"
-    echo "  ctx new task <spec> <name>     Create new task (e.g., ctx new task feat001 setup)"
-    echo "  ctx list specs                 List all specs"
-    echo "  ctx list tasks [spec]          List tasks (optionally filter by spec)"
+    echo "  ctx new task <spec> <name>     Create new task (e.g., ctx new task 2026-01-26-feat-payments setup)"
+    echo "  ctx list specs                 List all specs (date-named and legacy numbered)"
+    echo "  ctx list tasks [spec]          List tasks (optionally filter by spec stem/prefix)"
     echo "  ctx feedback <spec> <1-5> [issue]  Rate completed spec, auto-creates improve if ≤3"
     echo "  ctx help                       Show this help"
     echo ""
+    echo "Spec naming: YYYY-MM-DD-<type>-<name>.md (canonical)"
+    echo "Legacy numbered specs (feat001-name.md) are still discovered."
+    echo ""
     echo "Examples:"
     echo "  ctx new spec feat payments"
-    echo "  ctx new task feat001 stripe-integration"
+    echo "  ctx new task 2026-01-26-feat-payments stripe-integration"
     echo "  ctx list specs"
-    echo "  ctx list tasks feat001"
-    echo "  ctx feedback feat001 2 too-verbose"
+    echo "  ctx list tasks 2026-01-26-feat-payments"
+    echo "  ctx feedback 2026-01-26-feat-payments 2 too-verbose"
+    echo "  ctx feedback improve001 3 log-taxonomy   # legacy numbered still works"
 }
 
-# Get next spec number for a type
-next_spec_num() {
-    type="$1"
-    existing=$(ls "$CONTEXT_DIR/specs/" 2>/dev/null | grep "^${type}[0-9]" | sed "s/${type}\([0-9]*\).*/\1/" | sort -n | tail -1)
-    if [ -z "$existing" ]; then
-        echo "001"
-    else
-        printf "%03d" $((existing + 1))
+today() {
+    date +%Y-%m-%d
+}
+
+# Basename without .md
+spec_stem() {
+    basename "$1" .md
+}
+
+# Task-filter prefix for a spec file:
+# - date-named: full stem (2026-01-26-feat-payments)
+# - legacy numbered: type+num only (feat001)
+spec_task_prefix() {
+    stem="$1"
+    case "$stem" in
+        feat[0-9]*|fix[0-9]*|improve[0-9]*)
+            echo "$stem" | sed 's/^\([a-z]*[0-9][0-9]*\)-.*/\1/'
+            ;;
+        *)
+            echo "$stem"
+            ;;
+    esac
+}
+
+# Resolve user arg to a spec filepath. Accepts:
+# - full stem: 2026-01-26-feat-payments
+# - legacy prefix: feat001 / improve001
+# - unique substring of the stem
+resolve_spec_file() {
+    arg="$1"
+    specs_dir="$CONTEXT_DIR/specs"
+
+    if [ -f "$specs_dir/${arg}.md" ]; then
+        echo "$specs_dir/${arg}.md"
+        return 0
     fi
+
+    # Legacy numbered: feat001 → feat001-*.md
+    match=$(ls "$specs_dir/${arg}-"*.md 2>/dev/null | head -1)
+    if [ -n "$match" ] && [ -f "$match" ]; then
+        echo "$match"
+        return 0
+    fi
+
+    # Unique substring match on stem
+    matches=""
+    count=0
+    for f in "$specs_dir"/*.md; do
+        [ -f "$f" ] || continue
+        stem=$(spec_stem "$f")
+        case "$stem" in
+            *"$arg"*)
+                matches="$matches$f
+"
+                count=$((count + 1))
+                ;;
+        esac
+    done
+
+    if [ "$count" -eq 1 ]; then
+        echo "$matches" | head -1
+        return 0
+    fi
+    if [ "$count" -gt 1 ]; then
+        echo "Error: Ambiguous spec '$arg'. Matches:" >&2
+        echo "$matches" | while read -r f; do
+            [ -n "$f" ] && echo "  $(spec_stem "$f")" >&2
+        done
+        return 1
+    fi
+
+    echo "Error: No spec found matching '$arg'" >&2
+    return 1
 }
 
-# Get next task number for a spec
+# Get next task number for a spec prefix (full stem or legacy feat001)
 next_task_num() {
     spec="$1"
     existing=$(ls "$CONTEXT_DIR/tasks/" 2>/dev/null | grep "^${spec}-task[0-9]" | sed "s/${spec}-task\([0-9]*\).*/\1/" | sort -n | tail -1)
@@ -66,13 +134,13 @@ next_task_num() {
 cmd_new_spec() {
     type="$1"
     name="$2"
-    
+
     if [ -z "$type" ] || [ -z "$name" ]; then
         echo "Error: Usage: ctx new spec <type> <name>"
         echo "Types: feat, fix, improve"
         exit 1
     fi
-    
+
     case "$type" in
         feat|fix|improve) ;;
         *)
@@ -80,13 +148,20 @@ cmd_new_spec() {
             exit 1
             ;;
     esac
-    
-    num=$(next_spec_num "$type")
-    filename="${type}${num}-${name}.md"
+
+    # Normalize name to slug
+    name=$(echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//')
+    day=$(today)
+    filename="${day}-${type}-${name}.md"
     filepath="$CONTEXT_DIR/specs/$filename"
-    
+
+    if [ -f "$filepath" ]; then
+        echo "Error: Spec already exists: $filepath"
+        exit 1
+    fi
+
     cat > "$filepath" << ENDOFSPEC
-# ${type}${num}: ${name}
+# ${type}: ${name}
 
 Linear: N/A
 
@@ -99,33 +174,30 @@ Linear: N/A
 ## Notes
 {optional}
 ENDOFSPEC
-    
+
     echo "Created $filepath"
 }
 
 cmd_new_task() {
-    spec="$1"
+    spec_arg="$1"
     name="$2"
-    
-    if [ -z "$spec" ] || [ -z "$name" ]; then
+
+    if [ -z "$spec_arg" ] || [ -z "$name" ]; then
         echo "Error: Usage: ctx new task <spec> <name>"
-        echo "Example: ctx new task feat001 stripe-integration"
+        echo "Example: ctx new task 2026-01-26-feat-payments stripe-integration"
         exit 1
     fi
-    
-    # Validate spec exists
-    specfile=$(ls "$CONTEXT_DIR/specs/${spec}-"*.md 2>/dev/null | head -1)
-    if [ -z "$specfile" ]; then
-        echo "Error: No spec found matching '$spec'"
-        exit 1
-    fi
-    
-    num=$(next_task_num "$spec")
-    filename="${spec}-task${num}-${name}.md"
+
+    specfile=$(resolve_spec_file "$spec_arg") || exit 1
+    stem=$(spec_stem "$specfile")
+    prefix=$(spec_task_prefix "$stem")
+
+    num=$(next_task_num "$prefix")
+    filename="${prefix}-task${num}-${name}.md"
     filepath="$CONTEXT_DIR/tasks/$filename"
-    
+
     cat > "$filepath" << ENDOFTASK
-# ${spec}-task${num}: ${name}
+# ${prefix}-task${num}: ${name}
 
 Status: todo
 
@@ -141,58 +213,73 @@ Status: todo
 ## Blockers
 none
 ENDOFTASK
-    
+
     echo "Created $filepath"
 }
 
 cmd_list_specs() {
     check_context
     echo "Specs:"
-    ls "$CONTEXT_DIR/specs/"*.md 2>/dev/null | while read f; do
+    found=0
+    for f in "$CONTEXT_DIR/specs/"*.md; do
         [ -f "$f" ] || continue
-        name=$(basename "$f" .md)
-        # Extract spec prefix (e.g., feat001 from feat001-user-auth)
-        prefix=$(echo "$name" | sed 's/^\([a-z]*[0-9]*\)-.*/\1/')
-        total=$(ls "$CONTEXT_DIR/tasks/" 2>/dev/null | grep "^${prefix}-task" | wc -l)
-        completed=$(grep -l "Status: done" "$CONTEXT_DIR/tasks/${prefix}-task"*.md 2>/dev/null | wc -l || echo 0)
+        found=1
+        name=$(spec_stem "$f")
+        prefix=$(spec_task_prefix "$name")
+        total=$(ls "$CONTEXT_DIR/tasks/" 2>/dev/null | grep -c "^${prefix}-task" || true)
+        completed=$(grep -l "^Status: done" "$CONTEXT_DIR/tasks/${prefix}-task"*.md 2>/dev/null | wc -l | tr -d ' ')
+        completed=${completed:-0}
         echo "  $name [$completed/$total tasks]"
     done
+    if [ "$found" -eq 0 ]; then
+        echo "  (none)"
+    fi
 }
 
 cmd_list_tasks() {
     check_context
     filter="$1"
-    
+
+    if [ -n "$filter" ]; then
+        # Resolve to task prefix when filter names a spec
+        if specfile=$(resolve_spec_file "$filter" 2>/dev/null); then
+            filter=$(spec_task_prefix "$(spec_stem "$specfile")")
+        fi
+    fi
+
     echo "Tasks:"
-    ls "$CONTEXT_DIR/tasks/"*.md 2>/dev/null | while read f; do
+    found=0
+    for f in "$CONTEXT_DIR/tasks/"*.md; do
         [ -f "$f" ] || continue
-        name=$(basename "$f" .md)
-        
-        # Apply filter if provided
+        name=$(spec_stem "$f")
+
         if [ -n "$filter" ]; then
             case "$name" in
                 ${filter}-*) ;;
                 *) continue ;;
             esac
         fi
-        
+
+        found=1
         status=$(grep "^Status:" "$f" 2>/dev/null | head -1 | sed 's/Status: //' || echo "unknown")
         echo "  $name [$status]"
     done
+    if [ "$found" -eq 0 ]; then
+        echo "  (none)"
+    fi
 }
 
 cmd_feedback() {
-    spec="$1"
+    spec_arg="$1"
     rating="$2"
     issue="$3"
-    
-    if [ -z "$spec" ] || [ -z "$rating" ]; then
+
+    if [ -z "$spec_arg" ] || [ -z "$rating" ]; then
         echo "Error: Usage: ctx feedback <spec> <1-5> [issue-slug]"
-        echo "Example: ctx feedback feat001 2 too-verbose"
+        echo "Example: ctx feedback 2026-01-26-feat-payments 2 too-verbose"
         exit 1
     fi
-    
-    # Validate rating
+
     case "$rating" in
         1|2|3|4|5) ;;
         *)
@@ -200,20 +287,13 @@ cmd_feedback() {
             exit 1
             ;;
     esac
-    
-    # Find spec file
-    specfile=$(ls "$CONTEXT_DIR/specs/${spec}-"*.md 2>/dev/null | head -1)
-    if [ -z "$specfile" ]; then
-        echo "Error: No spec found matching '$spec'"
-        exit 1
-    fi
-    
-    # Update spec with feedback
+
+    specfile=$(resolve_spec_file "$spec_arg") || exit 1
+    stem=$(spec_stem "$specfile")
+
     if grep -q "^Rating:" "$specfile" 2>/dev/null; then
-        # Update existing rating
         sed -i "s/^Rating:.*/Rating: $rating/" "$specfile"
     else
-        # Append feedback section if not present
         if ! grep -q "^## Feedback" "$specfile" 2>/dev/null; then
             echo "" >> "$specfile"
             echo "## Feedback" >> "$specfile"
@@ -223,28 +303,37 @@ cmd_feedback() {
             sed -i "s/^Rating:.*/Rating: $rating/" "$specfile"
         fi
     fi
-    
-    # Update issue line
+
     if [ -n "$issue" ]; then
-        sed -i "s/^Issue:.*/Issue: $issue/" "$specfile"
+        if grep -q "^Issue:" "$specfile" 2>/dev/null; then
+            sed -i "s/^Issue:.*/Issue: $issue/" "$specfile"
+        else
+            echo "Issue: $issue" >> "$specfile"
+        fi
     fi
-    
+
     echo "Updated $specfile with rating $rating"
-    
+
     # Auto-create improve spec if rating <= 3 and issue provided
     if [ "$rating" -le 3 ] && [ -n "$issue" ]; then
-        num=$(next_spec_num "improve")
-        filename="improve${num}-${issue}.md"
+        issue_slug=$(echo "$issue" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//')
+        day=$(today)
+        filename="${day}-improve-${issue_slug}.md"
         filepath="$CONTEXT_DIR/specs/$filename"
-        
+
+        if [ -f "$filepath" ]; then
+            echo "Improve spec already exists: $filepath"
+            return 0
+        fi
+
         cat > "$filepath" << ENDOFIMPROVE
-# improve${num}: ${issue}
+# improve: ${issue_slug}
 
 Linear: N/A
-Source: ${spec}
+Source: ${stem}
 
 ## Problem
-Feedback from ${spec}: rating $rating/5
+Feedback from ${stem}: rating $rating/5
 Issue: ${issue}
 
 ## Tasks
@@ -252,9 +341,9 @@ Issue: ${issue}
 - [ ] task002: implement-fix
 
 ## Notes
-Auto-generated from feedback on ${spec}
+Auto-generated from feedback on ${stem}
 ENDOFIMPROVE
-        
+
         echo "Created $filepath (auto-generated from low rating)"
     fi
 }

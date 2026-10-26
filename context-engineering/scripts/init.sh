@@ -20,17 +20,21 @@ EXAMPLES_DIR="$SKILL_DIR/assets/examples"
 mkdir -p context/foundation
 mkdir -p context/specs
 mkdir -p context/tasks
+mkdir -p docs/solutions
 
 # Add .gitkeep files
 touch context/foundation/.gitkeep
 touch context/specs/.gitkeep
 touch context/tasks/.gitkeep
+touch docs/solutions/.gitkeep
 
 echo "✓ Created context/ structure:"
 echo "  context/"
 echo "  ├── foundation/"
 echo "  ├── specs/"
 echo "  └── tasks/"
+echo "  docs/"
+echo "  └── solutions/"
 
 # Handle --with-examples flag
 if [ "$1" = "--with-examples" ]; then

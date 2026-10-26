@@ -1,11 +1,13 @@
 ---
 name: learnings-researcher
-description: Search documented learnings, solutions, and anti-patterns for relevant context
+description: Search documented solutions and foundation learnings for relevant context
 ---
 
 # Learnings Researcher
 
-Search project learnings and documented solutions for relevant context.
+Search project solutions and foundation docs for relevant context.
+
+`/compound` writes to `docs/solutions/` and updates `context/foundation/` (gotchas, workflows, conventions). Search those paths — not empty legacy dirs.
 
 ## Input
 
@@ -15,25 +17,29 @@ Feature: [description of what's being built]
 
 ## Process
 
-1. **Check learnings directory**
+1. **Check captured solutions** (primary store from `/compound`)
    ```bash
-   ls context/learnings/*.md 2>/dev/null
-   cat context/learnings/*.md | grep -i "[keywords]"
+   ls docs/solutions/*.md 2>/dev/null
+   grep -il "[keywords]" docs/solutions/*.md 2>/dev/null
    ```
 
-2. **Check anti-patterns**
+2. **Check foundation learnings** (compound may append here)
    ```bash
-   ls context/anti-patterns/*.md 2>/dev/null
+   grep -il "[keywords]" context/foundation/gotchas.md \
+     context/foundation/workflows.md \
+     context/foundation/conventions.md \
+     context/foundation/*.md 2>/dev/null
    ```
 
-3. **Check foundation docs**
+3. **Check completed specs with feedback**
    ```bash
-   grep -l "[keywords]" context/foundation/*.md
+   grep -l "## Feedback" context/specs/*.md 2>/dev/null
    ```
 
-4. **Check completed specs with feedback**
+4. **Legacy dirs (optional, usually empty)**
    ```bash
-   grep -l "## Feedback" context/specs/*.md
+   # Only if present — nothing in this pack writes here anymore
+   ls context/learnings/*.md context/anti-patterns/*.md 2>/dev/null
    ```
 
 ## Output
@@ -41,19 +47,19 @@ Feature: [description of what's being built]
 ```markdown
 ## Learnings Research: [Feature]
 
-### Relevant Learnings
-- **[learning-title]**: [key insight]
-- **[learning-title]**: [gotcha to avoid]
+### Relevant Solutions
+- **[solution-title]** (`docs/solutions/…`): [key insight]
+- **[gotcha]** (`context/foundation/gotchas.md`): [what to avoid]
 
-### Anti-Patterns to Avoid
-- [anti-pattern]: [why it's bad]
+### From Foundation
+- [convention or workflow worth following]
 
 ### From Past Specs
-- `feat00X`: [what was learned]
+- `YYYY-MM-DD-feat-…`: [what was learned]
 
 ### Recommendations
 - Apply [learning] to avoid [problem]
-- Don't [anti-pattern] because [reason]
+- Follow [foundation note] because [reason]
 ```
 
 Return "No relevant learnings found" if directories don't exist or nothing matches.

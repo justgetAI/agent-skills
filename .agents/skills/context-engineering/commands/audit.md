@@ -141,14 +141,14 @@ Task({
 })
 
 When workers complete, consolidate their findings into:
-context/specs/${domain.name}.md
+context/specs/YYYY-MM-DD-feat-${domain.name}.md
 
 Use this format:
 ---
 title: ${domain.name}
-type: feature
+type: feat
 status: draft
-generated: <date>
+created: YYYY-MM-DD
 ---
 
 # ${domain.name}
@@ -211,7 +211,7 @@ As managers complete, they update tasks and message lead.
 
 Collect all specs and generate:
 
-1. **Feature specs** → `context/specs/<domain>.md` (auto-generated)
+1. **Feature specs** → `context/specs/YYYY-MM-DD-feat-<domain>.md` (auto-generated)
 2. **CLAUDE.md diff** → Show what's missing/outdated (HUMAN REVIEW REQUIRED)
 3. **Foundation suggestions** → Proposed updates (HUMAN REVIEW REQUIRED)
 
@@ -225,9 +225,9 @@ Present to user:
 ## Doc Audit Complete
 
 ### Auto-Generated (no approval needed)
-- context/specs/auth.md
-- context/specs/payments.md
-- context/specs/notifications.md
+- context/specs/2026-01-26-feat-auth.md
+- context/specs/2026-01-26-feat-payments.md
+- context/specs/2026-01-26-feat-notifications.md
 
 ### Requires Your Approval
 #### CLAUDE.md Changes
@@ -275,9 +275,9 @@ For a 5-domain codebase: ~$3-5 total
 ```
 context/
 ├── specs/
-│   ├── auth.md           # Generated
-│   ├── payments.md       # Generated
-│   └── notifications.md  # Generated
+│   ├── 2026-01-26-feat-auth.md           # Generated
+│   ├── 2026-01-26-feat-payments.md       # Generated
+│   └── 2026-01-26-feat-notifications.md  # Generated
 └── foundation/
     └── [proposed changes] # Requires approval
 

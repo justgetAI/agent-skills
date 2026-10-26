@@ -8,6 +8,8 @@ Rate completed specs to drive system improvement.
 ctx feedback <spec> <rating> [issue-slug]
 ```
 
+`<spec>` may be the full date-named stem, a unique substring, or a legacy numbered prefix (`feat001`).
+
 ## Rating Scale
 
 | Rating | Meaning | Action |
@@ -23,7 +25,7 @@ ctx feedback <spec> <rating> [issue-slug]
 When rating ≤ 3 with an issue slug:
 
 1. Updates spec's `## Feedback` section
-2. Auto-creates `improve{###}-{issue}.md`
+2. Auto-creates `YYYY-MM-DD-improve-<issue>.md`
 3. Links back to source spec
 
 ## Common Issue Slugs
@@ -39,12 +41,15 @@ When rating ≤ 3 with an issue slug:
 ## Example
 
 ```bash
-# Rate feat001 as 2/5 with "too-verbose" issue
-ctx feedback feat001 2 too-verbose
+# Rate a date-named spec as 2/5 with "too-verbose" issue
+ctx feedback 2026-01-26-feat-payments 2 too-verbose
 
 # Creates:
-# - Updates specs/feat001-payments.md ## Feedback
-# - Creates specs/improve004-too-verbose.md
+# - Updates specs/2026-01-26-feat-payments.md ## Feedback
+# - Creates specs/YYYY-MM-DD-improve-too-verbose.md
+
+# Legacy numbered specs still resolve:
+ctx feedback feat001 2 too-verbose
 ```
 
 ## Feedback Section Format
@@ -54,6 +59,6 @@ ctx feedback feat001 2 too-verbose
 
 **Rating:** 2/5
 **Issue:** too-verbose
-**Linked improvement:** improve004-too-verbose
+**Linked improvement:** 2026-01-26-improve-too-verbose
 **Notes:** Task descriptions were too long, agent spent tokens on boilerplate.
 ```
