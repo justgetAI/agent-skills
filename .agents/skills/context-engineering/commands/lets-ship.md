@@ -54,7 +54,7 @@ When `lets-ship` runs with existing `context/`:
 
 1. Check for active team: `ls ~/.claude/teams/ship-*` matching current project
 2. If team found → read task list → identify last completed phase → resume from next
-3. If a PR exists for the current branch (`gh pr list --head <branch> --state all --json number,state`) → open with no verdict comment: Phase 6; has a verdict comment (open or already merged into dev): Phase 8 (re-check the SHA)
+3. If a PR exists for the current branch (`gh pr list --head <branch> --state all --json number,state`) → open with no verdict comment: Phase 6; latest verdict comment is `PASS`/`PASS+NOTES` (open or already merged into dev): Phase 8 (re-check the SHA); latest verdict is `FAIL`: Phase 6 on a new fix branch
 4. If no team → check for in-progress spec (status: in-progress or git branch hint)
 5. If spec found → create new team, infer progress from spec checkboxes
 6. If nothing → start fresh from Phase 1
@@ -495,7 +495,7 @@ SendMessage({ type: "shutdown_request", recipient: "anti-slop-reviewer" })
 // Only shutdown active members — skip already-exited ones
 ```
 
-Run shutdown after Phase 8 (or when the user picks Continue / Done). Mark Phase 5 task complete.
+Mark Phase 5 task complete now (unblocks Phase 6). Run the shutdown above after Phase 8, or immediately if the user picks Continue / Done.
 
 ---
 

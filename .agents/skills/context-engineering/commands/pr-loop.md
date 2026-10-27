@@ -20,7 +20,7 @@ Ship the current branch: **PR → babysit bots → fix → merge dev → live ve
 
 Resolve `base` and `default` with [review-base.md](../references/review-base.md), then strip the `origin/` prefix. Feature branches target `dev` when it exists, otherwise the default branch. Never run bare `gh pr create` — it targets the default branch and skips dev. Never hardcode `main` — use `$default`.
 
-Two paths, fixed by `base`:
+Two paths, fixed by `base`. Any other resolved base (e.g. `CE_REVIEW_BASE=origin/staging`) → stop and ask; this loop only knows `dev` and `$default`.
 
 | `base` | Phase 7 merges? | SHA under test (`verified_sha`) | Phase 8 merges |
 |---|---|---|---|
@@ -89,7 +89,7 @@ gh pr view <n> --json mergeStateStatus   # must not be BEHIND or DIRTY — rebas
 gh pr merge <n> --merge --match-head-commit "$reviewed_sha"   # merge commits, never squash
 ```
 
-Merge refused because the head moved → unreviewed commits landed; back to 6.2.
+Merge refused because the head moved → unreviewed commits landed; back to 6.2. Confirm `gh pr view <n> --json state -q .state` is `MERGED` (not queued or auto-merge pending) before 7.2.
 
 ### 7.2 Fresh Verifier
 
