@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **context-engineering** `/pr-loop` command — PR → bot review → dev merge → fresh-agent live verify → gated main merge. Runs as `/lets-ship` Phases 6–8 or standalone. Bot findings are verified before acting or dismissing (reuses `finding-verifier`), dismissals are written, fix rounds are budgeted (3, or 5 for security), merges use `--merge` and refuse BEHIND/DIRTY. Main merge needs report + explicit approval + SHA match, always.
+
+### Changed
+- `/lets-ship --auto` no longer ends at "create PR"; it runs through the dev merge and live verify and **never merges main**. Repos with `ship-mode: full-stop` in `context/foundation/conventions.md` ignore `--auto` for Phases 6–8.
+- `/lets-ship` and `/work` no longer run bare `gh pr create` (which targeted the default branch and skipped `dev`); PRs target the base from `references/review-base.md`.
+
 ### Fixed
 - **context-engineering** spec naming drift — standardize on date-named `YYYY-MM-DD-<type>-<name>.md` (already used by `/lets-ship`, `/spec`, `/compound`) across `rules/naming.md`, examples, templates, and `scripts/ctx`. `ctx list` / `ctx feedback` / `ctx new task` discover date-named specs; legacy `feat001`/`fix001`/`improve001` forms still resolve.
 - **learnings-researcher** now searches `docs/solutions/` and `context/foundation/` (gotchas/workflows/conventions) — the paths `/compound` actually writes — instead of empty `context/learnings/` and `context/anti-patterns/`.

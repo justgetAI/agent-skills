@@ -21,14 +21,14 @@ A filesystem-based context system with autonomous workflows and native Teams tra
 ```
 /lets-ship "add stripe payments"
 ```
-Runs: understand > plan > work > review > compound. Human approves at gates.
+Runs: understand > plan > work > review > compound > PR loop > live verify > gated main merge. Human approves at gates.
 Teams + tasks persist as queryable trace.
 
 ### Autonomous Mode
 ```
 /lets-ship --auto "fix login timeout"
 ```
-Skips all gates. Auto-fixes review issues (max 2 iterations). Auto-creates PR.
+Skips gates through the dev merge + live verify. Auto-fixes review issues (max 2 iterations). Never merges main — Phase 8 always asks.
 
 ### Individual Commands
 ```
@@ -36,6 +36,7 @@ Skips all gates. Auto-fixes review issues (max 2 iterations). Auto-creates PR.
 /work                    # Execute current spec
 /review                  # Multi-agent code review
 /compound                # Capture learnings + rate spec
+/pr-loop                 # PR → bots → dev → live verify → gated main
 /status                  # See where you are
 /status --teams          # View team history
 ```
@@ -51,6 +52,7 @@ Skips all gates. Auto-fixes review issues (max 2 iterations). Auto-creates PR.
 | [work](commands/work.md) | Execute spec task-by-task | — |
 | [review](commands/review.md) | Multi-perspective code review | simplicity, spec, bug-hunter |
 | [compound](commands/compound.md) | Capture learnings + rate spec | — |
+| [pr-loop](commands/pr-loop.md) | PR → bots → dev → live verify → gated main (lets-ship 6–8) | finding-verifier, live verifier |
 | [compound-refresh](commands/compound-refresh.md) | Audit `docs/solutions/` for stale/overlap (design stub) | — |
 | [status](commands/status.md) | Progress, specs, team history | — |
 | [deepen](commands/deepen.md) | Research to improve spec | options |
@@ -107,7 +109,11 @@ docs/
 │     Gate: fix / ship / discuss                              │
 ├─────────────────────────────────────────────────────────────┤
 │  5. COMPOUND — capture learnings, rate spec                 │
-│     Gate: create PR / continue / done                       │
+│     Gate: ship / continue / done                            │
+├─────────────────────────────────────────────────────────────┤
+│  6. PR LOOP — PR to dev, triage bots, fix (3 rounds)        │
+│  7. LIVE VERIFY — merge dev, fresh verifier, verdict on PR  │
+│  8. MAIN GATE — report + explicit approval (never --auto)   │
 │     Shutdown team (trace persists)                          │
 └─────────────────────────────────────────────────────────────┘
 ```

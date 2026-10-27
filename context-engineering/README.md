@@ -4,7 +4,7 @@ Ship features with full traceability. Filesystem-based specs, tasks, and foundat
 
 ## What is it?
 
-An autonomous engineering workflow: understand > plan > work > review > compound. Every phase creates team members and tasks that persist as a queryable trace of **what** was built, **why**, and **how**.
+An autonomous engineering workflow: understand > plan > work > review > compound > PR loop > gated main merge. Every phase creates team members and tasks that persist as a queryable trace of **what** was built, **why**, and **how**.
 
 Works across Claude Code, Cursor, OpenCode, and any markdown-instruction agent.
 
@@ -44,11 +44,12 @@ That's it. `lets-ship` handles everything: bootstraps `context/` if needed, spaw
 
 | Command | What it does |
 |---------|-------------|
-| `/lets-ship` | Full pipeline: understand > plan > work > review > compound |
+| `/lets-ship` | Full pipeline: understand > plan > work > review > compound > PR loop > gated main merge |
 | `/spec` | Create a spec with automatic research |
 | `/work` | Execute current spec task-by-task |
 | `/review` | Multi-agent code review (simplicity + spec + bugs) |
 | `/compound` | Capture learnings + rate spec quality |
+| `/pr-loop` | PR → bot review → dev merge → live verify → gated main merge |
 | `/compound-refresh` | Audit `docs/solutions/` for stale/overlap (design stub) |
 | `/status` | Progress overview, spec listing, team history |
 | `/deepen` | Enhance spec with parallel research |
@@ -97,7 +98,7 @@ Every `/lets-ship` run creates a team (`ship-<feature>-<date>`) with tasks for e
 - **80% planning, 20% execution** — research before code
 - **Compound engineering** — each unit of work makes the next easier
 - **Trace everything** — teams and tasks persist as development history
-- **Human gates** — approve at each phase (or skip with `--auto`)
+- **Human gates** — approve at each phase (or skip with `--auto`); the main merge gate is never skipped
 
 ## Full Documentation
 

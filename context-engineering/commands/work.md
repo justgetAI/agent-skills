@@ -150,7 +150,7 @@ When all tasks done:
 **"All tasks complete. Tests passing. What next?"**
 
 1. **Review** — Run `/review` for code review
-2. **Ship** — Create PR: `gh pr create`
+2. **Ship** — Run `/pr-loop` (PR to the right base → bots → dev → gated main)
 3. **Compound** — Capture learnings
 4. **Continue** — Add more tasks
 
