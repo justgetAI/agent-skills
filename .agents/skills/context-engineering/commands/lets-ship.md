@@ -54,7 +54,7 @@ When `lets-ship` runs with existing `context/`:
 
 1. Check for active team: `ls ~/.claude/teams/ship-*` matching current project
 2. If team found → read task list → identify last completed phase → resume from next
-3. If an open PR exists for the current branch (`gh pr view --json number,state`) → resume at Phase 6; if it has a verdict comment → Phase 8 (re-check the SHA)
+3. If a PR exists for the current branch (`gh pr list --head <branch> --state all --json number,state`) → open with no verdict comment: Phase 6; has a verdict comment (open or already merged into dev): Phase 8 (re-check the SHA)
 4. If no team → check for in-progress spec (status: in-progress or git branch hint)
 5. If spec found → create new team, infer progress from spec checkboxes
 6. If nothing → start fresh from Phase 1

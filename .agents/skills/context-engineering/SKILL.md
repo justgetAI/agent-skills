@@ -28,7 +28,7 @@ Teams + tasks persist as queryable trace.
 ```
 /lets-ship --auto "fix login timeout"
 ```
-Skips gates through the dev merge + live verify. Auto-fixes review issues (max 2 iterations). Never merges main — Phase 8 always asks.
+Skips gates through the dev merge + live verify. Auto-fixes internal review issues (max 2 iterations; bot rounds have their own budget in `/pr-loop`). Never merges main — Phase 8 always asks.
 
 ### Individual Commands
 ```

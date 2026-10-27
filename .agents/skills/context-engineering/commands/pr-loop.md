@@ -24,7 +24,7 @@ Two paths, fixed by `base`:
 
 | `base` | Phase 7 merges? | SHA under test (`verified_sha`) | Phase 8 merges |
 |---|---|---|---|
-| `dev` | yes, into dev | `git rev-parse origin/dev` after the merge | a new `dev → $default` PR |
+| `dev` | yes, into dev | `git fetch origin dev && git rev-parse origin/dev` after the merge | a new `dev → $default` PR |
 | `$default` (no dev, or running on `dev` itself) | **no** — the PR targets the default branch, so merging it is Phase 8 | `gh pr view <n> --json headRefOid -q .headRefOid` | this PR |
 
 ---
@@ -72,6 +72,8 @@ Push real fixes to the SAME branch, then return to 6.2.
 
 **Budget: 3 bot rounds** (5 if the PR touches auth, payments, secrets, or carries a security label). Budget spent with real findings open → stop and ask the user. This is separate from `/lets-ship`'s 2 internal review iterations.
 
+Record the reviewed head once the loop settles: `reviewed_sha=$(gh pr view <n> --json headRefOid -q .headRefOid)`.
+
 **Gate (default mode):** "PR green, findings dispositioned. Merge to `<base>`?"
 
 ---
@@ -84,8 +86,10 @@ Push real fixes to the SAME branch, then return to 6.2.
 
 ```bash
 gh pr view <n> --json mergeStateStatus   # must not be BEHIND or DIRTY — rebase/update first
-gh pr merge <n> --merge                  # merge commits, never squash
+gh pr merge <n> --merge --match-head-commit "$reviewed_sha"   # merge commits, never squash
 ```
+
+Merge refused because the head moved → unreviewed commits landed; back to 6.2.
 
 ### 7.2 Fresh Verifier
 
@@ -116,12 +120,12 @@ Then, `base` = `dev`:
 
 ```bash
 gh pr create --base "$default" --head dev --title "release: <summary>" --body-file <report>
-gh pr view <m> --json mergeStateStatus   # not BEHIND or DIRTY
-gh pr merge <m> --merge
+gh pr view <m> --json mergeStateStatus,headRefOid   # not BEHIND or DIRTY; headRefOid must equal verified_sha
+gh pr merge <m> --merge --match-head-commit "$verified_sha"
 git checkout dev && git pull --ff-only   # repo ends on dev
 ```
 
-`base` = `$default`: check `mergeStateStatus` on the PR itself, then `gh pr merge <n> --merge`, and end on `dev` if it exists, otherwise `$default`.
+`base` = `$default`: check `mergeStateStatus` on the PR itself, then `gh pr merge <n> --merge --match-head-commit "$verified_sha"`, and end on `dev` if it exists, otherwise `$default`.
 
 ---
 
