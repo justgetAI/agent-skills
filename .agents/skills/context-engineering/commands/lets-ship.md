@@ -504,8 +504,8 @@ Run shutdown after Phase 8 (or when the user picks Continue / Done). Mark Phase 
 Follow [pr-loop.md](pr-loop.md) — it is the single source of truth for these phases. Mark each phase task complete as its gate passes.
 
 - **Phase 6: PR + bot loop** — PR to the resolved base (never bare `gh pr create`), wait for CI + review bots, verify and disposition every finding, fix within budget (3 bot rounds, 5 security).
-- **Phase 7: Merge dev + live verify** — `--merge` (never squash), not BEHIND/DIRTY; fresh verifier agent; verdict + SHA posted on the PR.
-- **Phase 8: Gated main merge** — report, explicit user approval, SHA re-check, `dev → main` PR merged with `--merge`, repo ends on dev. **`--auto` never passes this gate.**
+- **Phase 7: Merge dev + live verify** — merge only PRs targeting `dev` (`--merge`, never squash, not BEHIND/DIRTY); fresh verifier agent; verdict + SHA posted on the PR. PRs targeting the default branch wait for Phase 8.
+- **Phase 8: Gated main merge** — report, explicit user approval, SHA re-check, merge into the default branch (never hardcoded `main`) with `--merge`, repo ends on dev. **`--auto` never passes this gate.**
 
 "Feature shipped. Team trace preserved at `~/.claude/tasks/ship-<slug>-<date>/`"
 

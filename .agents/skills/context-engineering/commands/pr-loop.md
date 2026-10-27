@@ -18,7 +18,14 @@ Ship the current branch: **PR → babysit bots → fix → merge dev → live ve
 
 ## Base Branch
 
-Resolve `base` with [review-base.md](../references/review-base.md), then strip the `origin/` prefix. Feature branches target `dev` when it exists, otherwise the default branch. Never run bare `gh pr create` — it targets the default branch and skips dev.
+Resolve `base` and `default` with [review-base.md](../references/review-base.md), then strip the `origin/` prefix. Feature branches target `dev` when it exists, otherwise the default branch. Never run bare `gh pr create` — it targets the default branch and skips dev. Never hardcode `main` — use `$default`.
+
+Two paths, fixed by `base`:
+
+| `base` | Phase 7 merges? | SHA under test (`verified_sha`) | Phase 8 merges |
+|---|---|---|---|
+| `dev` | yes, into dev | `git rev-parse origin/dev` after the merge | a new `dev → $default` PR |
+| `$default` (no dev, or running on `dev` itself) | **no** — the PR targets the default branch, so merging it is Phase 8 | `gh pr view <n> --json headRefOid -q .headRefOid` | this PR |
 
 ---
 
@@ -73,16 +80,16 @@ Push real fixes to the SAME branch, then return to 6.2.
 
 ### 7.1 Merge
 
+**Only when `base` is `dev`.** A PR targeting `$default` is never merged here — skip to 7.2 and verify the PR head (or its preview env); merging it is Phase 8.
+
 ```bash
 gh pr view <n> --json mergeStateStatus   # must not be BEHIND or DIRTY — rebase/update first
 gh pr merge <n> --merge                  # merge commits, never squash
 ```
 
-No `dev` branch → skip the merge here. Verify on the PR branch or its preview env; the PR merge becomes Phase 8.
-
 ### 7.2 Fresh Verifier
 
-Live-test by a **fresh agent that did not write the code**. Spawn one general-purpose subagent with only: PR number, SHA under test (`git rev-parse origin/dev`), the changed behavior in one line, and the project run/QA skill if one exists. It exercises real behavior (deployed dev env, simulator, real endpoint) — not just unit tests — and returns `PASS`, `PASS+NOTES`, or `FAIL` with every test run and its raw output.
+Live-test by a **fresh agent that did not write the code**. Spawn one general-purpose subagent with only: PR number, SHA under test (`verified_sha`, see Base Branch), the changed behavior in one line, and the project run/QA skill if one exists. It exercises real behavior (deployed dev env, simulator, real endpoint) — not just unit tests — and returns `PASS`, `PASS+NOTES`, or `FAIL` with every test run and its raw output.
 
 Empty or "should work" report = `FAIL`. Redispatch once, then surface to the user.
 
@@ -103,18 +110,18 @@ Empty or "should work" report = `FAIL`. Redispatch once, then surface to the use
    - **Summary of changes** — brief
    - **Files touched** — each file + one-line purpose
 2. **Explicit user approval** after the report.
-3. **SHA still matches.** `git fetch && git rev-parse origin/dev` equals the SHA in the 7.3 verdict. Different → verdict is void; back to 7.2 on the new head.
+3. **SHA still matches.** Re-derive `verified_sha` the same way (`git fetch && git rev-parse origin/dev`, or the PR's `headRefOid`); it must equal the SHA in the 7.3 verdict. Different → verdict is void; back to 7.2 on the new head.
 
-Then:
+Then, `base` = `dev`:
 
 ```bash
-gh pr create --base main --head dev --title "release: <summary>" --body-file <report>
+gh pr create --base "$default" --head dev --title "release: <summary>" --body-file <report>
 gh pr view <m> --json mergeStateStatus   # not BEHIND or DIRTY
 gh pr merge <m> --merge
 git checkout dev && git pull --ff-only   # repo ends on dev
 ```
 
-No `dev` branch → the gate applies to merging the feature PR itself.
+`base` = `$default`: check `mergeStateStatus` on the PR itself, then `gh pr merge <n> --merge`, and end on `dev` if it exists, otherwise `$default`.
 
 ---
 
@@ -123,7 +130,7 @@ No `dev` branch → the gate applies to merging the feature PR itself.
 - "Checks are green so bots must be done" → bots post comments, not checks. Confirm both.
 - "Unit tests passed, that's the live test" → it isn't. Phase 7 means real behavior.
 - "I tested it myself" → author verdicts don't count.
-- "Verdict was PASS an hour ago" → only if `origin/dev` still matches the verdict SHA.
+- "Verdict was PASS an hour ago" → only if a re-derived `verified_sha` still matches the verdict SHA.
 - "`--auto` is on, I'll merge main too" → Phase 8 is always the user's call.
 - "The bot said so" → verify against the source first.
-- Merged main and moved on → repo must end on dev.
+- Merged main and moved on → repo must end on dev (or the default branch when there is no dev).
