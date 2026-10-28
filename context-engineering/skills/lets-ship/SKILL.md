@@ -1,6 +1,6 @@
 ---
 name: lets-ship
-description: Full engineering workflow with native Teams traceability — understand, plan, work, review, compound, PR loop, gated main merge
+description: Full engineering workflow with traceability (native Teams on Claude Code) — understand, plan, work, review, compound, PR loop, gated main merge
 argument-hint: "[feature description] [--full-stop | --auto | --yolo]"
 ---
 
@@ -14,15 +14,11 @@ Every phase creates tasks and spawns team members. After completion, the team pe
 
 <feature_description>$ARGUMENTS</feature_description>
 
-**Parse flags** — mode, see [ship-modes.md](../../references/ship-modes.md):
-- `--full-stop` → you approve every gate
-- `--auto` → unattended through dev merge + live verify; stops **ready for main**
-- `--yolo` → auto, then merges main if every Phase 8 check passes
+**Parse flags:**
+- `--full-stop` / `--auto` / `--yolo` → ship mode. Behavior and the no-flag prompt: [ship-modes.md](../../references/ship-modes.md)
 - Everything else → feature description
 
 **If empty:** Ask "What are we shipping? Describe the feature, fix, or improvement."
-
-**No mode flag:** ask once, before Phase 1, with the ask-user tool. Offer full-stop / auto / yolo, each with its one-line explanation from ship-modes.md. Never assume a mode.
 
 **Not on Claude Code?** Map tool names with [harness-tools.md](../../references/harness-tools.md).
 
@@ -528,16 +524,11 @@ Follow [pr-loop.md](../pr-loop/SKILL.md) — it is the single source of truth fo
 | Compound | — | Ship / done |
 | PR loop | finding-verifier(s) | Merge to dev |
 | Live verify | fresh verifier | Verdict on PR |
-| Main merge | — | **Always human** |
+| Main merge | — | Every check passes; approval except in yolo |
 
 ## Flags
 
-| Flag | Effect |
-|------|--------|
-| `--full-stop` | Ask at every gate (ask-user tool) |
-| `--auto` | Unattended through dev merge + live verify in a real environment; fixes PR findings; stops ready for main |
-| `--yolo` | auto, then merges main when verdict, SHA, merge state and findings all pass |
-| *(none)* | Ask which of the three, once, before Phase 1 |
+`--full-stop`, `--auto`, `--yolo`, or none (asks). See [ship-modes.md](../../references/ship-modes.md).
 
 ---
 

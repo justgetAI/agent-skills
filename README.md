@@ -34,13 +34,15 @@ In the Codex app, open **Plugins**, select **Add marketplace**, enter `justgetAI
 
 ### OpenCode
 
-Add the plugin to your global (`~/.config/opencode/opencode.json`) or project `opencode.json`:
+Add the plugin to your global (`~/.config/opencode/opencode.json`) or project `opencode.json`. OpenCode 2.x uses `plugins`:
 
 ```json
 {
-  "plugin": ["context-engineering@git+https://github.com/justgetAI/agent-skills.git"]
+  "plugins": ["context-engineering@git+https://github.com/justgetAI/agent-skills.git"]
 }
 ```
+
+On OpenCode 1.x the key is `plugin` (singular).
 
 Restart OpenCode. The plugin registers every skill as both an OpenCode skill and a `/command`, so `/lets-ship` and `/pr-loop` work directly.
 

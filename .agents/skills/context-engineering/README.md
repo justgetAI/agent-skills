@@ -4,9 +4,9 @@ Ship features from spec to verified main merge. Filesystem-based specs, tasks an
 
 ## What is it?
 
-An engineering workflow: understand > plan > work > review > compound > PR loop > live verify > main merge. Every phase creates team members and tasks that persist as a queryable trace of **what** was built, **why**, and **how**.
+An engineering workflow: understand > plan > work > review > compound > PR loop > live verify > main merge. On Claude Code, every phase creates team members and tasks that persist as a queryable trace of **what** was built, **why**, and **how**. On Codex and OpenCode, the spec, PR comments and `docs/solutions/` are the trace.
 
-Works across Claude Code, Codex, OpenCode, Cursor and any markdown-instruction agent. Install commands for each host are in the [root README](../README.md#install).
+Works across Claude Code, Codex, OpenCode, Cursor and any markdown-instruction agent. Install commands for each host are in the [root README](https://github.com/justgetAI/agent-skills#install).
 
 ## Installation
 
@@ -24,7 +24,10 @@ codex plugin add context-engineering@justgetai-tools
 
 ### OpenCode
 ```json
-{ "plugin": ["context-engineering@git+https://github.com/justgetAI/agent-skills.git"] }
+{ "plugins": ["context-engineering@git+https://github.com/justgetAI/agent-skills.git"] }
+```
+OpenCode 1.x: use `plugin` (singular).
+```json
 ```
 
 ### npx

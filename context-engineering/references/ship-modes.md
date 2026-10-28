@@ -40,4 +40,4 @@ Runs auto, then Phase 8 merges into the default branch **without asking**, but o
 - the PR is not BEHIND or DIRTY;
 - no real finding is left open.
 
-If any of them fails, yolo becomes auto: stop ready for main and say why. The report is still posted on the PR before the merge.
+These are the checks in `/pr-loop` Phase 8, which is the authoritative list. If any fails, don't merge: say which check failed and hand the decision to the user. Don't call it ready for main. The report is posted on the PR before any merge.

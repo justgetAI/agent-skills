@@ -55,4 +55,4 @@ codex plugin marketplace add "$PWD" && codex plugin add context-engineering@just
 |---|---|
 | Claude Code | `claude --plugin-dir ./context-engineering` |
 | Codex | `codex plugin marketplace add "$PWD"` (snapshot: re-add after edits) |
-| OpenCode | `"plugin": ["/path/to/agent-skills"]` in `opencode.json`, or open this repo as the project |
+| OpenCode | `"plugins": ["/path/to/agent-skills"]` (1.x: `"plugin"`) in `opencode.json`, or open this repo as the project |

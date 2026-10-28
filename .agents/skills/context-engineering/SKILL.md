@@ -9,7 +9,7 @@ metadata:
 
 # Context Engineering
 
-A filesystem-based context system with autonomous workflows and native Teams traceability.
+A filesystem-based context system with autonomous workflows and traceability: native Teams on Claude Code, and the spec, PR comments and `docs/solutions/` elsewhere.
 
 > **Philosophy:** 80% planning, 20% execution. Each unit of work makes the next easier. Every feature gets a persistent trace of **what** was built, **why**, and **how**.
 
