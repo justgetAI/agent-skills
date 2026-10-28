@@ -1,7 +1,7 @@
 ---
 name: lets-ship
-description: Full engineering workflow with native Teams traceability — understand, plan, work, review, compound, PR loop, gated main merge
-argument-hint: "[feature description] [--auto]"
+description: Full engineering workflow with traceability (native Teams on Claude Code) — understand, plan, work, review, compound, PR loop, gated main merge
+argument-hint: "[feature description] [--full-stop | --auto | --yolo]"
 ---
 
 # lets-ship — Ship Features with Full Traceability
@@ -15,10 +15,12 @@ Every phase creates tasks and spawns team members. After completion, the team pe
 <feature_description>$ARGUMENTS</feature_description>
 
 **Parse flags:**
-- `--auto` → autonomous mode (skip human gates, max 2 fix iterations) — **except Phase 8: main merge always needs explicit approval**. Ignored for Phases 6–8 when `context/foundation/conventions.md` has `ship-mode: full-stop` (money repos).
+- `--full-stop` / `--auto` / `--yolo` → ship mode. Behavior and the no-flag prompt: [ship-modes.md](../../references/ship-modes.md)
 - Everything else → feature description
 
 **If empty:** Ask "What are we shipping? Describe the feature, fix, or improvement."
+
+**Not on Claude Code?** Map tool names with [harness-tools.md](../../references/harness-tools.md).
 
 ---
 
@@ -34,7 +36,7 @@ If `context/` does not exist:
    mkdir -p docs/solutions
    ```
 
-2. **Interactive Q&A** (skipped with `--auto` if description is sufficient):
+2. **Interactive Q&A** (skipped in auto/yolo if the description is sufficient):
    - "What's the tech stack?" (languages, frameworks, DB)
    - "What's the architecture?" (monolith, microservices, monorepo)
    - "Any critical conventions?" (naming, patterns, testing approach)
@@ -146,7 +148,7 @@ Task({
 
 **Wait for researchers to report back.** Then present findings.
 
-Ask (skipped with `--auto`):
+Ask (skipped in auto/yolo):
 - "Here's what I found. Does this align?"
 - "Any additional context?"
 - "Ready to plan?"
@@ -204,7 +206,7 @@ If the spec targets symptoms rather than root cause, revise it before presenting
 
 ### 2.3 Gate: Plan Approval
 
-Present spec and offer options (with `--auto`: auto-approve):
+Present spec and offer options (auto/yolo: auto-approve):
 
 1. **Approve** — proceed to work
 2. **Deepen** — run `/deepen` for more research
@@ -261,7 +263,7 @@ for each implementation task:
 
 ### 3.4 Gate: Work Complete
 
-"All tasks complete. Tests passing. Ready for review?" (with `--auto`: auto-proceed)
+"All tasks complete. Tests passing. Ready for review?" (auto/yolo: auto-proceed)
 
 Mark Phase 3 task complete. Unblocks Phase 4.
 
@@ -274,7 +276,7 @@ Mark Phase 3 task complete. Unblocks Phase 4.
 ### 4.1 Gather Changes
 
 ```bash
-# Resolve the review base — see references/review-base.md
+# Resolve the review base — see ../../references/review-base.md
 current=$(git branch --show-current)
 default=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
 default=${default:-main}
@@ -395,7 +397,7 @@ Apply verdicts before presenting:
 
 Skip verification for: anti-slop LINT-mode findings (deterministic — oxlint output is its own evidence) and Consider-tier items. Anti-slop HEURISTIC findings that would land as Should Fix are verified like any other.
 
-**Never present an unverified Must Fix.** In `--auto` mode this gate is what makes auto-fixing safe: fix iterations only run on CONFIRMED findings.
+**Never present an unverified Must Fix.** In auto/yolo this gate is what makes auto-fixing safe: fix iterations only run on CONFIRMED findings.
 
 ### 4.5 Consolidate & Present
 
@@ -421,13 +423,13 @@ Wait for all reviewers. Present consolidated feedback (lead the summary with `Re
 
 ### 4.6 Gate: Review Decision
 
-Options (with `--auto`: auto-fix CONFIRMED Must Fix items, max 2 iterations — anti-slop findings are advisory and never trigger a fix iteration):
+Options (auto/yolo: auto-fix CONFIRMED Must Fix items, max 2 iterations — anti-slop findings are advisory and never trigger a fix iteration):
 
 1. **Fix issues** — address feedback, re-run review
 2. **Ship as-is** — proceed to compound
 3. **Discuss** — clarify specific feedback
 
-**--auto safety valve:** If "Must Fix" issues persist after 2 fix iterations, stop and ask user.
+**auto/yolo safety valve:** If "Must Fix" issues persist after 2 fix iterations, stop and ask user.
 
 Mark Phase 4 task complete. Unblocks Phase 5.
 
@@ -439,7 +441,7 @@ Mark Phase 4 task complete. Unblocks Phase 5.
 
 ### 5.1 Extract Learnings
 
-Ask (with `--auto`: auto-extract from code changes):
+Ask (auto/yolo: auto-extract from code changes):
 - "What patterns did we discover?"
 - "What gotchas should we document?"
 - "Any conventions worth adding to foundation?"
@@ -459,7 +461,7 @@ Rating guide:
 - 1: failed, major rework needed
 ```
 
-With `--auto`: heuristic rating based on:
+In auto/yolo: heuristic rating based on:
 - Number of fix iterations needed
 - Review severity of findings
 - Spec checkbox completion rate
@@ -475,7 +477,7 @@ When rating <= 3 with an issue, auto-create improvement spec.
 
 ### 5.3 Gate: Ship
 
-Options (with `--auto`: proceed to Phase 6):
+Options (auto/yolo: proceed to Phase 6):
 
 1. **Ship** — proceed to Phase 6
 2. **Continue** — start another feature
@@ -501,11 +503,11 @@ Mark Phase 5 task complete now (unblocks Phase 6). Run the shutdown above after 
 
 ## Phases 6–8: PR Loop
 
-Follow [pr-loop.md](pr-loop.md) — it is the single source of truth for these phases. Mark each phase task complete as its gate passes.
+Follow [pr-loop.md](../pr-loop/SKILL.md) — it is the single source of truth for these phases. Mark each phase task complete as its gate passes.
 
 - **Phase 6: PR + bot loop** — PR to the resolved base (never bare `gh pr create`), wait for CI + review bots, verify and disposition every finding, fix within budget (3 bot rounds, 5 security).
 - **Phase 7: Merge dev + live verify** — merge only PRs targeting `dev` (`--merge`, never squash, not BEHIND/DIRTY); fresh verifier agent; verdict + SHA posted on the PR. PRs targeting the default branch wait for Phase 8.
-- **Phase 8: Gated main merge** — report, explicit user approval, SHA re-check, merge into the default branch (never hardcoded `main`) with `--merge`, repo ends on dev. **`--auto` never passes this gate.**
+- **Phase 8: Gated main merge** — report, explicit user approval, SHA re-check, merge into the default branch (never hardcoded `main`) with `--merge`, repo ends on dev. full-stop and auto stop here for you; yolo merges only if every check passes.
 
 "Feature shipped. Team trace preserved at `~/.claude/tasks/ship-<slug>-<date>/`"
 
@@ -522,13 +524,11 @@ Follow [pr-loop.md](pr-loop.md) — it is the single source of truth for these p
 | Compound | — | Ship / done |
 | PR loop | finding-verifier(s) | Merge to dev |
 | Live verify | fresh verifier | Verdict on PR |
-| Main merge | — | **Always human** |
+| Main merge | — | Every check passes; approval except in yolo |
 
 ## Flags
 
-| Flag | Effect |
-|------|--------|
-| `--auto` | Skip human gates through Phase 7, auto-fix (max 2 iterations). Never merges main. Ignored for Phases 6–8 on `ship-mode: full-stop` repos |
+`--full-stop`, `--auto`, `--yolo`, or none (asks). See [ship-modes.md](../../references/ship-modes.md).
 
 ---
 

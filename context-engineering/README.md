@@ -1,12 +1,12 @@
 # Context Engineering
 
-Ship features with full traceability. Filesystem-based specs, tasks, and foundation docs — powered by native Claude Code Teams.
+Ship features from spec to verified main merge. Filesystem-based specs, tasks and foundation docs, on Claude Code, Codex and OpenCode.
 
 ## What is it?
 
-An autonomous engineering workflow: understand > plan > work > review > compound > PR loop > gated main merge. Every phase creates team members and tasks that persist as a queryable trace of **what** was built, **why**, and **how**.
+An engineering workflow: understand > plan > work > review > compound > PR loop > live verify > main merge. On Claude Code, every phase creates team members and tasks that persist as a queryable trace of **what** was built, **why**, and **how**. On Codex and OpenCode, the spec, PR comments and `docs/solutions/` are the trace.
 
-Works across Claude Code, Cursor, OpenCode, and any markdown-instruction agent.
+Works across Claude Code, Codex, OpenCode, Cursor and any markdown-instruction agent. Install commands for each host are in the [root README](https://github.com/justgetAI/agent-skills#install).
 
 ## Installation
 
@@ -14,6 +14,20 @@ Works across Claude Code, Cursor, OpenCode, and any markdown-instruction agent.
 ```bash
 claude plugin marketplace add justgetAI/agent-skills
 claude plugin install context-engineering@justgetai-tools
+```
+
+### Codex
+```bash
+codex plugin marketplace add justgetAI/agent-skills
+codex plugin add context-engineering@justgetai-tools
+```
+
+### OpenCode
+```json
+{ "plugins": ["context-engineering@git+https://github.com/justgetAI/agent-skills.git"] }
+```
+OpenCode 1.x: use `plugin` (singular).
+```json
 ```
 
 ### npx
@@ -31,18 +45,23 @@ cp -r /tmp/agent-skills/context-engineering ~/.claude/skills/
 ## Quick Start
 
 ```bash
-# Full workflow — human gates at each phase
-/lets-ship "add stripe payments"
-
-# Autonomous — skip gates, auto-fix, auto-PR
-/lets-ship --auto "fix login timeout"
+/lets-ship "add stripe payments"            # asks which mode
+/lets-ship --auto "fix login timeout"       # ships to dev, verifies, stops ready for main
 ```
+
+| Mode | Flag | What happens |
+|---|---|---|
+| **full-stop** | `--full-stop` | You stay in the loop: it asks before each phase and before each merge. |
+| **auto** | `--auto` | Ships to dev, verifies in a real environment, fixes PR findings, stops **ready for main**. |
+| **yolo** | `--yolo` | auto, then merges main without asking if every check passes. |
+
+No flag: it asks which mode first. Details: [references/ship-modes.md](references/ship-modes.md).
 
 That's it. `lets-ship` handles everything: bootstraps `context/` if needed, spawns research agents, creates specs, executes tasks, runs multi-agent review, captures learnings.
 
-## Commands
+## Skills
 
-| Command | What it does |
+| Skill | What it does |
 |---------|-------------|
 | `/lets-ship` | Full pipeline: understand > plan > work > review > compound > PR loop > gated main merge |
 | `/spec` | Create a spec with automatic research |
@@ -98,7 +117,7 @@ Every `/lets-ship` run creates a team (`ship-<feature>-<date>`) with tasks for e
 - **80% planning, 20% execution** — research before code
 - **Compound engineering** — each unit of work makes the next easier
 - **Trace everything** — teams and tasks persist as development history
-- **Human gates** — approve at each phase (or skip with `--auto`); the main merge gate is never skipped
+- **Human gates** — full-stop asks at each phase; auto stops ready for main; only yolo merges main, and only when every check passes
 
 ## Full Documentation
 

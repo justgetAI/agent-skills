@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [3.4.0] - 2026-10-28
+
+### Added
+- **Three ship modes** for `/lets-ship` and `/pr-loop`, defined once in `references/ship-modes.md`:
+  - `--full-stop`: you approve every gate.
+  - `--auto`: ships to dev, live-verifies in a real environment (browser, simulator, live API), fixes PR findings, then stops ready for main.
+  - `--yolo`: auto, then merges main without asking when the verdict, SHA, merge state and findings all pass.
+  - With no flag, it asks which mode first.
+- **Codex and OpenCode support.** `context-engineering/.codex-plugin/plugin.json` and `.agents/plugins/marketplace.json` (Codex); `package.json`, `index.js` and `.opencode/plugins/context-engineering.js` (OpenCode, adapted from EveryInc/compound-engineering-plugin, MIT).
+- `references/harness-tools.md` maps Claude tool names to Codex and OpenCode equivalents.
+- Root `AGENTS.md`: repo layout, working agreement, validation and per-host local testing.
+
+### Changed
+- **Commands are now skills.** `context-engineering/commands/<name>.md` moved to `context-engineering/skills/<name>/SKILL.md` so every host loads them. Slash names are unchanged (`/lets-ship`, `/pr-loop`, ...).
+- README rewritten around install-per-host, quick start, modes and the loop.
+
+### Removed
+- The `ship-mode: full-stop` setting in `context/foundation/conventions.md`. Pick the mode per run instead.
+
+### Fixed
+- `agents/context-worker.md` now has frontmatter, so `claude plugin validate --strict` passes.
+
+## [3.3.0] - 2026-10-28
+
 ### Added
 - **context-engineering** `/pr-loop` command — PR → bot review → dev merge → fresh-agent live verify → gated main merge. Runs as `/lets-ship` Phases 6–8 or standalone. Bot findings are verified before acting or dismissing (reuses `finding-verifier`), dismissals are written, fix rounds are budgeted (3, or 5 for security), merges use `--merge` and refuse BEHIND/DIRTY. Main merge needs report + explicit approval + SHA match, always.
 

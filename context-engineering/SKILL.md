@@ -1,15 +1,15 @@
 ---
 name: context-engineering
-description: Human-readable context management for AI coding agents. Filesystem-based specs, tasks, and foundation docs. Ships features with full traceability via native Teams.
-compatibility: Claude Code, Cursor, OpenCode, or any markdown-instruction agent
+description: Spec-driven shipping for coding agents. Filesystem-based specs, tasks and foundation docs; research, plan, build, review, PR loop and verified main merge in full-stop, auto or yolo mode.
+compatibility: Claude Code, Codex, OpenCode, Cursor, or any markdown-instruction agent
 metadata:
   author: justgetAI
-  version: "3.0"
+  version: "3.4.0"
 ---
 
 # Context Engineering
 
-A filesystem-based context system with autonomous workflows and native Teams traceability.
+A filesystem-based context system with autonomous workflows and traceability: native Teams on Claude Code, and the spec, PR comments and `docs/solutions/` elsewhere.
 
 > **Philosophy:** 80% planning, 20% execution. Each unit of work makes the next easier. Every feature gets a persistent trace of **what** was built, **why**, and **how**.
 
@@ -21,14 +21,21 @@ A filesystem-based context system with autonomous workflows and native Teams tra
 ```
 /lets-ship "add stripe payments"
 ```
-Runs: understand > plan > work > review > compound > PR loop > live verify > gated main merge. Human approves at gates.
-Teams + tasks persist as queryable trace.
+Runs: understand > plan > work > review > compound > PR loop > live verify > main merge. Teams + tasks persist as a queryable trace.
 
-### Autonomous Mode
-```
-/lets-ship --auto "fix login timeout"
-```
-Skips gates through the dev merge + live verify. Auto-fixes internal review issues (max 2 iterations; bot rounds have their own budget in `/pr-loop`). Never merges main — Phase 8 always asks.
+### Modes
+| Mode | Flag | What happens |
+|---|---|---|
+| **full-stop** | `--full-stop` | You stay in the loop: it asks before each phase and before each merge. |
+| **auto** | `--auto` | Ships to dev, verifies in a real environment, fixes PR findings, stops **ready for main**. |
+| **yolo** | `--yolo` | auto, then merges main without asking if every check passes. |
+
+No flag: it asks which mode first. Details: [references/ship-modes.md](references/ship-modes.md).
+
+Internal review auto-fixes are capped at 2 iterations; PR bot rounds have their own budget in `/pr-loop`.
+
+### Other Hosts
+Codex and OpenCode run the same skills. Claude tool names map via [references/harness-tools.md](references/harness-tools.md).
 
 ### Individual Commands
 ```
@@ -43,20 +50,20 @@ Skips gates through the dev merge + live verify. Auto-fixes internal review issu
 
 ---
 
-## Commands
+## Skills
 
-| Command | Purpose | Team Members |
+| Skill | Purpose | Team Members |
 |---------|---------|-------------|
-| [lets-ship](commands/lets-ship.md) | Full workflow with teams + traceability | research, review |
-| [spec](commands/spec.md) | Create spec with research | repo, learnings |
-| [work](commands/work.md) | Execute spec task-by-task | — |
-| [review](commands/review.md) | Multi-perspective code review | simplicity, spec, bug-hunter |
-| [compound](commands/compound.md) | Capture learnings + rate spec | — |
-| [pr-loop](commands/pr-loop.md) | PR → bots → dev → live verify → gated main (lets-ship 6–8) | finding-verifier, live verifier |
-| [compound-refresh](commands/compound-refresh.md) | Audit `docs/solutions/` for stale/overlap (design stub) | — |
-| [status](commands/status.md) | Progress, specs, team history | — |
-| [deepen](commands/deepen.md) | Research to improve spec | options |
-| [audit](commands/audit.md) | Audit codebase docs, generate specs | hierarchical swarm |
+| [lets-ship](skills/lets-ship/SKILL.md) | Full workflow with teams + traceability | research, review |
+| [spec](skills/spec/SKILL.md) | Create spec with research | repo, learnings |
+| [work](skills/work/SKILL.md) | Execute spec task-by-task | — |
+| [review](skills/review/SKILL.md) | Multi-perspective code review | simplicity, spec, bug-hunter |
+| [compound](skills/compound/SKILL.md) | Capture learnings + rate spec | — |
+| [pr-loop](skills/pr-loop/SKILL.md) | PR → bots → dev → live verify → gated main (lets-ship 6–8) | finding-verifier, live verifier |
+| [compound-refresh](skills/compound-refresh/SKILL.md) | Audit `docs/solutions/` for stale/overlap (design stub) | — |
+| [status](skills/status/SKILL.md) | Progress, specs, team history | — |
+| [deepen](skills/deepen/SKILL.md) | Research to improve spec | options |
+| [audit](skills/audit/SKILL.md) | Audit codebase docs, generate specs | hierarchical swarm |
 
 ---
 
@@ -88,7 +95,7 @@ docs/
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  /lets-ship "feature description" [--auto]                  │
+│  /lets-ship "feature" [--full-stop|--auto|--yolo]           │
 ├─────────────────────────────────────────────────────────────┤
 │  0. BOOTSTRAP — cold start if no context/ (create dirs,    │
 │     interactive Q&A, generate foundation)                    │
@@ -113,7 +120,7 @@ docs/
 ├─────────────────────────────────────────────────────────────┤
 │  6. PR LOOP — PR to dev, triage bots, fix (3 rounds)        │
 │  7. LIVE VERIFY — merge dev, fresh verifier, verdict on PR  │
-│  8. MAIN GATE — report + explicit approval (never --auto)   │
+│  8. MAIN GATE — report + approval (yolo: auto if all pass)  │
 │     Shutdown team (trace persists)                          │
 └─────────────────────────────────────────────────────────────┘
 ```

@@ -21,7 +21,7 @@ Get feedback from multiple perspectives before shipping. Reviewers are spawned a
 ## Phase 1: Gather Changes
 
 ```bash
-# Resolve the review base — see references/review-base.md
+# Resolve the review base — see ../../references/review-base.md
 current=$(git branch --show-current)
 default=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
 default=${default:-main}

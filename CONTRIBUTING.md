@@ -5,7 +5,8 @@
 1. Create a directory: `skill-name/`
 2. Add required file: `SKILL.md` with valid frontmatter
 3. Add optional: `scripts/`, `references/`, `assets/`, `README.md`
-4. Open a PR
+4. Adding a workflow to context-engineering? Put it in `context-engineering/skills/<name>/SKILL.md` and follow [AGENTS.md](AGENTS.md) (mirror sync, version bumps, per-host testing)
+5. Open a PR
 
 ### SKILL.md Frontmatter
 
