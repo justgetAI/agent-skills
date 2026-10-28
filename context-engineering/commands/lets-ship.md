@@ -1,12 +1,12 @@
 ---
 name: lets-ship
-description: Full engineering workflow with native Teams traceability — understand, plan, work, review, compound
+description: Full engineering workflow with native Teams traceability — understand, plan, work, review, compound, PR loop, gated main merge
 argument-hint: "[feature description] [--auto]"
 ---
 
 # lets-ship — Ship Features with Full Traceability
 
-End-to-end workflow: understand > plan > work > review > compound.
+End-to-end workflow: understand > plan > work > review > compound > PR loop > live verify > gated main merge.
 
 Every phase creates tasks and spawns team members. After completion, the team persists as a queryable trace of **what** was built, **why**, and **how**.
 
@@ -15,7 +15,7 @@ Every phase creates tasks and spawns team members. After completion, the team pe
 <feature_description>$ARGUMENTS</feature_description>
 
 **Parse flags:**
-- `--auto` → autonomous mode (skip all human gates, max 2 fix iterations)
+- `--auto` → autonomous mode (skip human gates, max 2 fix iterations) — **except Phase 8: main merge always needs explicit approval**. Ignored for Phases 6–8 when `context/foundation/conventions.md` has `ship-mode: full-stop` (money repos).
 - Everything else → feature description
 
 **If empty:** Ask "What are we shipping? Describe the feature, fix, or improvement."
@@ -54,9 +54,10 @@ When `lets-ship` runs with existing `context/`:
 
 1. Check for active team: `ls ~/.claude/teams/ship-*` matching current project
 2. If team found → read task list → identify last completed phase → resume from next
-3. If no team → check for in-progress spec (status: in-progress or git branch hint)
-4. If spec found → create new team, infer progress from spec checkboxes
-5. If nothing → start fresh from Phase 1
+3. If a PR exists for the current branch (`gh pr list --head <branch> --state all --json number,state`) → open with no verdict comment: Phase 6; latest verdict comment is `PASS`/`PASS+NOTES` (open or already merged into dev): Phase 8 (re-check the SHA); latest verdict is `FAIL`: Phase 6 on a new fix branch
+4. If no team → check for in-progress spec (status: in-progress or git branch hint)
+5. If spec found → create new team, infer progress from spec checkboxes
+6. If nothing → start fresh from Phase 1
 
 ---
 
@@ -80,13 +81,19 @@ TaskCreate({ subject: "Phase 1: Understand", description: "Load foundation, rese
 TaskCreate({ subject: "Phase 2: Plan", description: "Create spec with acceptance criteria" })
 TaskCreate({ subject: "Phase 3: Work", description: "Execute spec task-by-task" })
 TaskCreate({ subject: "Phase 4: Review", description: "Multi-agent code review" })
-TaskCreate({ subject: "Phase 5: Compound", description: "Capture learnings, rate spec, create PR" })
+TaskCreate({ subject: "Phase 5: Compound", description: "Capture learnings, rate spec" })
+TaskCreate({ subject: "Phase 6: PR + bot loop", description: "Open PR to base, triage bot findings, fix" })
+TaskCreate({ subject: "Phase 7: Merge dev + live verify", description: "Merge, fresh verifier, record verdict" })
+TaskCreate({ subject: "Phase 8: Gated main merge", description: "Report, explicit approval, SHA check, merge main" })
 
 // Set dependencies: each phase blocked by the previous
 TaskUpdate({ taskId: "2", addBlockedBy: ["1"] })
 TaskUpdate({ taskId: "3", addBlockedBy: ["2"] })
 TaskUpdate({ taskId: "4", addBlockedBy: ["3"] })
 TaskUpdate({ taskId: "5", addBlockedBy: ["4"] })
+TaskUpdate({ taskId: "6", addBlockedBy: ["5"] })
+TaskUpdate({ taskId: "7", addBlockedBy: ["6"] })
+TaskUpdate({ taskId: "8", addBlockedBy: ["7"] })
 ```
 
 ---
@@ -428,7 +435,7 @@ Mark Phase 4 task complete. Unblocks Phase 5.
 
 ## Phase 5: Compound
 
-**Goal:** Capture learnings and ship.
+**Goal:** Capture learnings before the PR goes out.
 
 ### 5.1 Extract Learnings
 
@@ -468,11 +475,11 @@ When rating <= 3 with an issue, auto-create improvement spec.
 
 ### 5.3 Gate: Ship
 
-Options (with `--auto`: auto-create PR):
+Options (with `--auto`: proceed to Phase 6):
 
-1. **Create PR** — `gh pr create`
+1. **Ship** — proceed to Phase 6
 2. **Continue** — start another feature
-3. **Done** — end session
+3. **Done** — end session (run `/pr-loop` later)
 
 ### 5.4 Shutdown
 
@@ -483,10 +490,22 @@ SendMessage({ type: "shutdown_request", recipient: "learnings-researcher" })
 SendMessage({ type: "shutdown_request", recipient: "simplicity-reviewer" })
 SendMessage({ type: "shutdown_request", recipient: "spec-reviewer" })
 SendMessage({ type: "shutdown_request", recipient: "bug-hunter" })
+SendMessage({ type: "shutdown_request", recipient: "anti-slop-reviewer" })
+// Plus every verify-* finding-verifier and the Phase 7 live verifier
 // Only shutdown active members — skip already-exited ones
 ```
 
-Mark Phase 5 task complete.
+Mark Phase 5 task complete now (unblocks Phase 6). Run the shutdown above after Phase 8, or immediately if the user picks Continue / Done.
+
+---
+
+## Phases 6–8: PR Loop
+
+Follow [pr-loop.md](pr-loop.md) — it is the single source of truth for these phases. Mark each phase task complete as its gate passes.
+
+- **Phase 6: PR + bot loop** — PR to the resolved base (never bare `gh pr create`), wait for CI + review bots, verify and disposition every finding, fix within budget (3 bot rounds, 5 security).
+- **Phase 7: Merge dev + live verify** — merge only PRs targeting `dev` (`--merge`, never squash, not BEHIND/DIRTY); fresh verifier agent; verdict + SHA posted on the PR. PRs targeting the default branch wait for Phase 8.
+- **Phase 8: Gated main merge** — report, explicit user approval, SHA re-check, merge into the default branch (never hardcoded `main`) with `--merge`, repo ends on dev. **`--auto` never passes this gate.**
 
 "Feature shipped. Team trace preserved at `~/.claude/tasks/ship-<slug>-<date>/`"
 
@@ -500,13 +519,16 @@ Mark Phase 5 task complete.
 | Plan | (optional) options-researcher | Approve plan |
 | Work | — | Ready for review |
 | Review | simplicity-reviewer, spec-reviewer, bug-hunter, anti-slop-reviewer, finding-verifier(s) | Fix / ship |
-| Compound | — | Create PR / done |
+| Compound | — | Ship / done |
+| PR loop | finding-verifier(s) | Merge to dev |
+| Live verify | fresh verifier | Verdict on PR |
+| Main merge | — | **Always human** |
 
 ## Flags
 
 | Flag | Effect |
 |------|--------|
-| `--auto` | Skip all human gates, auto-fix (max 2 iterations), auto-create PR |
+| `--auto` | Skip human gates through Phase 7, auto-fix (max 2 iterations). Never merges main. Ignored for Phases 6–8 on `ship-mode: full-stop` repos |
 
 ---
 
