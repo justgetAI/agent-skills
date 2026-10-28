@@ -1,7 +1,7 @@
 {
   "name": "context-engineering",
-  "description": "Ship features with full traceability — specs, multi-agent review, native Teams integration, autonomous mode",
-  "version": "3.3.0",
+  "description": "Spec-driven shipping for coding agents: research, plan, build, review, PR loop, verified main merge (full-stop, auto, yolo)",
+  "version": "3.4.0",
   "author": {
     "name": "justgetAI"
   },

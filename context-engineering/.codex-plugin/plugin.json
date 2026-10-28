@@ -1,0 +1,27 @@
+{
+  "name": "context-engineering",
+  "version": "3.4.0",
+  "description": "Spec-driven shipping for coding agents: research, plan, build, review, PR loop, verified main merge",
+  "author": {
+    "name": "justgetAI"
+  },
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT",
+  "keywords": ["context", "specs", "review", "pr-loop", "shipping", "workflow-automation"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Context Engineering",
+    "shortDescription": "Ship features from spec to verified main merge",
+    "longDescription": "Context Engineering runs the full loop: research, spec, build, multi-agent review, captured learnings, then a PR loop that babysits review bots, merges to dev, live-verifies in a real environment and gates the main merge. Three modes: full-stop, auto, yolo.",
+    "developerName": "justgetAI",
+    "category": "Coding",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/justgetAI/agent-skills",
+    "defaultPrompt": [
+      "Let's ship: add rate limiting to the login endpoint",
+      "Run the PR loop on this branch",
+      "Review my current branch"
+    ]
+  }
+}

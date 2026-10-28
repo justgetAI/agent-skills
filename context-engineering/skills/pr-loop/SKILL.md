@@ -1,7 +1,7 @@
 ---
 name: pr-loop
 description: Ship a finished branch through PR → bot review → dev merge → live verify → gated main merge. Phases 6–8 of /lets-ship; runs standalone on any built branch.
-argument-hint: "[--auto]"
+argument-hint: "[--full-stop | --auto | --yolo]"
 ---
 
 # pr-loop — PR to Main, Gated
@@ -12,13 +12,16 @@ Ship the current branch: **PR → babysit bots → fix → merge dev → live ve
 
 ## Modes
 
-- **Default (full-stop)** — stop for the user before the dev merge and before the main merge.
-- **`--auto` (full-send)** — runs unattended through the dev merge and live verify. **Never merges main**; Phase 8 always waits for the user.
-- **Money repos** — if `context/foundation/conventions.md` contains `ship-mode: full-stop`, `--auto` is ignored for Phases 6–8.
+Full rules: [ship-modes.md](../../references/ship-modes.md). Tool names on Codex/OpenCode: [harness-tools.md](../../references/harness-tools.md).
+
+- **`--full-stop`** — asks before the dev merge and before the main merge.
+- **`--auto`** — unattended through the dev merge and live verify; fixes PR findings; stops **ready for main**.
+- **`--yolo`** — auto, then merges main if every Phase 8 check passes.
+- **No flag** — standalone: ask which mode. Inside `/lets-ship`: use its mode.
 
 ## Base Branch
 
-Resolve `base` and `default` with [review-base.md](../references/review-base.md), then strip the `origin/` prefix. Feature branches target `dev` when it exists, otherwise the default branch. Never run bare `gh pr create` — it targets the default branch and skips dev. Never hardcode `main` — use `$default`.
+Resolve `base` and `default` with [review-base.md](../../references/review-base.md), then strip the `origin/` prefix. Feature branches target `dev` when it exists, otherwise the default branch. Never run bare `gh pr create` — it targets the default branch and skips dev. Never hardcode `main` — use `$default`.
 
 Two paths, fixed by `base`. Any other resolved base (e.g. `CE_REVIEW_BASE=origin/staging`) → stop and ask; this loop only knows `dev` and `$default`.
 
@@ -74,7 +77,7 @@ Push real fixes to the SAME branch, then return to 6.2.
 
 Record the reviewed head once the loop settles: `reviewed_sha=$(gh pr view <n> --json headRefOid -q .headRefOid)`.
 
-**Gate (default mode):** "PR green, findings dispositioned. Merge to `<base>`?"
+**Gate (full-stop):** "PR green, findings dispositioned. Merge to `<base>`?"
 
 ---
 
@@ -93,7 +96,7 @@ Merge refused because the head moved → unreviewed commits landed; back to 6.2.
 
 ### 7.2 Fresh Verifier
 
-Live-test by a **fresh agent that did not write the code**. Spawn one general-purpose subagent with only: PR number, SHA under test (`verified_sha`, see Base Branch), the changed behavior in one line, and the project run/QA skill if one exists. It exercises real behavior (deployed dev env, simulator, real endpoint) — not just unit tests — and returns `PASS`, `PASS+NOTES`, or `FAIL` with every test run and its raw output.
+Live-test by a **fresh agent that did not write the code**. Spawn one general-purpose subagent with only: PR number, SHA under test (`verified_sha`, see Base Branch), the changed behavior in one line, and the project run/QA skill if one exists. It exercises real behavior in a realistic environment — a browser against the deployed dev env for web, a simulator or device for mobile, real requests for APIs — not just unit tests — and returns `PASS`, `PASS+NOTES`, or `FAIL` with every test run and its raw output.
 
 Empty or "should work" report = `FAIL`. Redispatch once, then surface to the user.
 
@@ -107,13 +110,13 @@ Empty or "should work" report = `FAIL`. Redispatch once, then surface to the use
 
 ## Phase 8: Gated Main Merge
 
-**HARD GATE — `--auto` never passes it. Merge main only with all three:**
+**HARD GATE — full-stop and auto always stop here. yolo passes only when 1 and 3 hold and nothing is left open (2 is waived). Merge main only with:**
 
-1. **Report posted to the user:**
+1. **Report posted to the user and on the PR** (yolo too, before it merges):
    - **Tests carried out** — every test from all phases, with real results
    - **Summary of changes** — brief
    - **Files touched** — each file + one-line purpose
-2. **Explicit user approval** after the report.
+2. **Explicit user approval** after the report (waived in yolo).
 3. **SHA still matches.** Re-derive `verified_sha` the same way (`git fetch && git rev-parse origin/dev`, or the PR's `headRefOid`); it must equal the SHA in the 7.3 verdict. Different → verdict is void; back to 7.2 on the new head.
 
 Then, `base` = `dev`:
@@ -135,6 +138,7 @@ git checkout dev && git pull --ff-only   # repo ends on dev
 - "Unit tests passed, that's the live test" → it isn't. Phase 7 means real behavior.
 - "I tested it myself" → author verdicts don't count.
 - "Verdict was PASS an hour ago" → only if a re-derived `verified_sha` still matches the verdict SHA.
-- "`--auto` is on, I'll merge main too" → Phase 8 is always the user's call.
+- "auto is on, I'll merge main too" → only yolo merges main. auto stops ready for main.
+- "yolo, so skip the SHA check" → yolo waives approval, never the checks.
 - "The bot said so" → verify against the source first.
 - Merged main and moved on → repo must end on dev (or the default branch when there is no dev).

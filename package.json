@@ -1,0 +1,11 @@
+{
+  "name": "context-engineering",
+  "version": "3.4.0",
+  "description": "Spec-driven shipping for coding agents: research, plan, build, review, PR loop, verified main merge",
+  "type": "module",
+  "private": true,
+  "main": "index.js",
+  "homepage": "https://github.com/justgetAI/agent-skills",
+  "repository": "https://github.com/justgetAI/agent-skills",
+  "license": "MIT"
+}

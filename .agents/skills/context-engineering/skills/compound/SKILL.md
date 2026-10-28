@@ -177,7 +177,7 @@ After capturing learnings, rate the spec that drove this work.
 
 ### Process
 
-1. Ask user to rate (or auto-rate from heuristics in `--auto` mode)
+1. Ask user to rate (or auto-rate from heuristics in auto/yolo)
 2. Update spec's `## Feedback` section:
    ```markdown
    ## Feedback
@@ -190,7 +190,7 @@ After capturing learnings, rate the spec that drove this work.
    - Link back to source spec for context
    - Example: `improve-too-verbose` creates a spec to make outputs more concise
 
-### Auto-Rating Heuristics (--auto mode)
+### Auto-Rating Heuristics (auto/yolo)
 
 - 0 fix iterations in review + all criteria met → 5
 - 1 fix iteration + all criteria met → 4
