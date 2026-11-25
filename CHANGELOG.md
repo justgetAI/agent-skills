@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- `catalogue.json`: approved third-party skills and plugins by source, with scope and update policy. `scripts/check-catalogue.mjs` validates it.
+- `scripts/check-machine.mjs`: reports skills, plugins and connections missing from any Claude profile or Codex.
+
+### Changed
+- `.agents/skills/{context-engineering,orchestrating-swarms,prompt-engineering}` are links to the plugin folders, replacing the copies.
+
+### Fixed
+- The prompt-engineering plugin's `SKILL.md` was a link pointing outside the plugin.
+- `.cursor/skills/marketing-copy` pointed at a missing folder; it is now `marketing`.
+
 ## [3.4.0] - 2026-10-28
 
 ### Added
