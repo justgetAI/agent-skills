@@ -105,6 +105,7 @@ Install any of them with `npx skills add justgetAI/agent-skills --skill <name>`,
 - `skills` install with `npx skills`. `plugins` are for anything that also needs hooks, agents, commands or an MCP server.
 - A plugin without a Codex version gives a `claudeOnly` reason.
 - `connections` are MCP servers, kept apart from skills. Each harness signs in itself; no keys are stored here.
+- `path` narrows a source to one folder. `npx skills` skips linked files but still reports success, so check that `SKILL.md` exists after every install.
 - `dropped` is removed wherever it is found.
 
 `node scripts/check-machine.mjs` reports what this machine is missing in each Claude profile and in Codex. It changes nothing.

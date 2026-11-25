@@ -217,7 +217,8 @@
         "sentry-cli"
       ],
       "scope": "core",
-      "update": "approve"
+      "update": "approve",
+      "path": "packages/cli/plugins/sentry-cli/skills/sentry-cli"
     },
     {
       "source": "linearis-oss/linearis",

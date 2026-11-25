@@ -20,6 +20,7 @@ for (const s of c.skills) {
   check(!sources.has(s.source), `source listed twice: ${s.source}`)
   sources.add(s.source)
   check(SCOPES.includes(s.scope) && UPDATES.includes(s.update), `bad scope or update: ${s.source}`)
+  check(s.path === undefined || /^[\w.-]+(\/[\w.-]+)*$/.test(s.path), `bad path: ${s.source}`)
   check(s.skills.length > 0, `no skills: ${s.source}`)
   for (const n of s.skills) {
     check(SKILL.test(n), `bad skill name: ${n}`)
@@ -54,7 +55,8 @@ if (process.argv.includes("--online")) {
   for (const s of c.skills) {
     try {
       const out = execFileSync("gh", ["api", `repos/${s.source}/git/trees/HEAD?recursive=1`, "--jq", ".truncated, (.tree[].path | select(test(\"(^|/)SKILL.md$\")))"], { encoding: "utf8", maxBuffer: 1 << 26 })
-      const [truncated, ...paths] = out.trim().split("\n")
+      const [truncated, ...all] = out.trim().split("\n")
+      const paths = all.filter(p => !s.path || p.startsWith(`${s.path}/`))
       check(truncated === "false", `${s.source}: file list truncated, cannot check`)
       // A skill's frontmatter name can differ from its folder, and installs use the name.
       // Read likely folders first, then the rest only if something is still missing.
