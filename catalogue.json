@@ -510,6 +510,7 @@
       "gstack"
     ],
     "plugins": [
+      "mgrep@Mixedbread-Grep",
       "expo@expo-plugins",
       "cloudflare@cloudflare",
       "supabase@claude-plugins-official",

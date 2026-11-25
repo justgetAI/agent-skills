@@ -46,15 +46,16 @@ if (process.argv.includes("--online")) {
       const out = execFileSync("gh", ["api", `repos/${s.source}/git/trees/HEAD?recursive=1`, "--jq", ".truncated, (.tree[].path | select(test(\"(^|/)SKILL.md$\")))"], { encoding: "utf8", maxBuffer: 1 << 26 })
       const [truncated, ...paths] = out.trim().split("\n")
       check(truncated === "false", `${s.source}: file list truncated, cannot check`)
-      const found = new Set(paths.map(p => p.split("/").at(-2)))
-      if (paths.includes("SKILL.md")) found.add(s.source.split("/")[1])
-      // A skill's frontmatter name can differ from its folder.
-      const missing = s.skills.filter(n => !found.has(n))
-      if (missing.length) for (const p of paths) {
+      // A skill's frontmatter name can differ from its folder, and installs use the name.
+      // Read likely folders first, then the rest only if something is still missing.
+      const missing = new Set(s.skills)
+      const likely = p => p === "SKILL.md" || s.skills.includes(p.split("/").at(-2))
+      for (const p of [...paths].sort((a, b) => likely(b) - likely(a))) {
+        if (!missing.size) break
         const text = execFileSync("gh", ["api", `repos/${s.source}/contents/${p}`, "-H", "Accept: application/vnd.github.raw"], { encoding: "utf8" })
-        found.add(text.match(/^name:\s*["']?([a-z0-9-]+)/m)?.[1])
+        missing.delete(text.match(/^name:\s*["']?([a-z0-9-]+)/m)?.[1])
       }
-      for (const n of missing) check(found.has(n), `${s.source} has no skill named ${n}`)
+      for (const n of missing) check(false, `${s.source} has no skill named ${n}`)
     } catch (e) {
       errors.push(`${s.source}: ${String(e.stderr || e.message).trim().slice(0, 200)}`)
     }
