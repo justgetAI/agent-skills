@@ -103,7 +103,11 @@ Install any of them with `npx skills add justgetAI/agent-skills --skill <name>`,
 - `scope`: `core` goes on every machine; `project` is installed per project.
 - `update`: `auto` may update unattended; `approve` waits for a person.
 - `skills` install with `npx skills`. `plugins` are for anything that also needs hooks, agents, commands or an MCP server.
+- A plugin without a Codex version gives a `claudeOnly` reason.
+- `connections` are MCP servers, kept apart from skills. Each harness signs in itself; no keys are stored here.
 - `dropped` is removed wherever it is found.
+
+`node scripts/check-machine.mjs` reports what this machine is missing in each Claude profile and in Codex. It changes nothing.
 
 ## Upgrading
 

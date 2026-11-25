@@ -34,10 +34,20 @@ for (const p of c.plugins) {
   plugins.add(p.name)
   check(SCOPES.includes(p.scope) && UPDATES.includes(p.update), `bad scope or update: ${p.name}`)
   check(p.claude || p.codex, `no harness for plugin: ${p.name}`)
+  check(p.codex ? !p.claudeOnly : p.claudeOnly, `${p.name} needs a codex entry or a claudeOnly reason`)
   for (const h of [p.claude, p.codex].filter(Boolean)) {
     check(REPO.test(h.marketplace) && PLUGIN.test(h.plugin), `bad plugin entry: ${p.name}`)
     check(!c.dropped.plugins.includes(h.plugin), `${h.plugin} is listed and dropped`)
   }
+}
+const connections = new Set()
+for (const m of c.connections) {
+  check(!connections.has(m.name), `connection listed twice: ${m.name}`)
+  connections.add(m.name)
+  // This repo is public, so no query strings or credentials in URLs.
+  check(/^https:\/\/[\w.-]+(\/[\w.\/-]*)?$/.test(m.url), `bad connection url: ${m.name}`)
+  check(SCOPES.includes(m.scope), `bad scope: ${m.name}`)
+  check(m.harnesses.length > 0 && m.harnesses.every(h => ["claude", "codex"].includes(h)), `bad harnesses: ${m.name}`)
 }
 
 if (process.argv.includes("--online")) {
@@ -66,4 +76,4 @@ if (errors.length) {
   console.error(errors.join("\n"))
   process.exit(1)
 }
-console.log(`ok: ${seen.size} skills from ${sources.size} sources, ${plugins.size} plugins`)
+console.log(`ok: ${seen.size} skills from ${sources.size} sources, ${plugins.size} plugins, ${connections.size} connections`)

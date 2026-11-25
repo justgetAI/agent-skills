@@ -18,8 +18,9 @@ context-engineering/                the plugin root
   references/                       shared docs, incl. ship-modes.md and harness-tools.md
   rules/ scripts/ assets/ integrations/
 .agents/skills/                     links to the skill folders, for npx skills / Skills CLI
-catalogue.json                      approved third-party skills and plugins
+catalogue.json                      approved third-party skills, plugins and connections
 scripts/check-catalogue.mjs         validates the catalogue (--online checks the sources)
+scripts/check-machine.mjs           reports what this machine is missing (read-only)
 .agent/ .cursor/ .factory/ .windsurf/ skills/   symlinks into .agents/skills
 ```
 

@@ -4,6 +4,8 @@
     {
       "source": "justgetAI/agent-skills",
       "skills": [
+        "install-anti-slop",
+        "marketing-copy",
         "prompt-engineering"
       ],
       "scope": "core",
@@ -107,6 +109,7 @@
     {
       "source": "anthropics/skills",
       "skills": [
+        "frontend-design",
         "skill-creator"
       ],
       "scope": "core",
@@ -272,6 +275,40 @@
       ],
       "scope": "core",
       "update": "approve"
+    },
+    {
+      "source": "RevenueCat/ai-toolkit",
+      "skills": [
+        "create-revenuecat-project",
+        "integrate-revenuecat",
+        "revenuecat",
+        "revenuecat-ad-tracking",
+        "revenuecat-app-valuation",
+        "revenuecat-audiences",
+        "revenuecat-billing",
+        "revenuecat-charts",
+        "revenuecat-cli",
+        "revenuecat-customer-center",
+        "revenuecat-dashboard-links",
+        "revenuecat-entitlements-gate",
+        "revenuecat-experiment-analysis",
+        "revenuecat-experiments",
+        "revenuecat-forecasting",
+        "revenuecat-identify-user",
+        "revenuecat-migrate",
+        "revenuecat-migrate-to-spm",
+        "revenuecat-paywall",
+        "revenuecat-paywall-design",
+        "revenuecat-purchase-flow",
+        "revenuecat-sdk-compatibility",
+        "revenuecat-status",
+        "revenuecat-store-state",
+        "revenuecat-testing-setup",
+        "revenuecat-troubleshoot",
+        "revenuecat-webhooks"
+      ],
+      "scope": "core",
+      "update": "approve"
     }
   ],
   "plugins": [
@@ -285,26 +322,6 @@
         "marketplace": "justgetAI/agent-skills",
         "plugin": "context-engineering@justgetai-tools"
       },
-      "scope": "core",
-      "update": "auto"
-    },
-    {
-      "name": "anti-slop",
-      "claude": {
-        "marketplace": "justgetAI/agent-skills",
-        "plugin": "anti-slop@justgetai-tools"
-      },
-      "codex": null,
-      "scope": "core",
-      "update": "auto"
-    },
-    {
-      "name": "marketing-copy",
-      "claude": {
-        "marketplace": "justgetAI/agent-skills",
-        "plugin": "marketing-copy@justgetai-tools"
-      },
-      "codex": null,
       "scope": "core",
       "update": "auto"
     },
@@ -327,7 +344,10 @@
         "marketplace": "mksglu/context-mode",
         "plugin": "context-mode@context-mode"
       },
-      "codex": null,
+      "codex": {
+        "marketplace": "mksglu/context-mode",
+        "plugin": "context-mode@context-mode"
+      },
       "scope": "core",
       "update": "approve",
       "note": "Ships Codex plugin files; not yet tested in Codex."
@@ -340,7 +360,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "approve"
+      "update": "approve",
+      "claudeOnly": "Connects to the Paper desktop app; not packaged for Codex."
     },
     {
       "name": "codex",
@@ -350,7 +371,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "approve"
+      "update": "approve",
+      "claudeOnly": "Calls Codex from Claude."
     },
     {
       "name": "agent-sdk-dev",
@@ -360,7 +382,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Claude commands and agents."
     },
     {
       "name": "aikido",
@@ -368,9 +391,12 @@
         "marketplace": "anthropics/claude-plugins-official",
         "plugin": "aikido@claude-plugins-official"
       },
-      "codex": null,
+      "codex": {
+        "marketplace": "AikidoSec/aikido-claude-plugin",
+        "plugin": "aikido@aikido-plugins"
+      },
       "scope": "core",
-      "update": "auto"
+      "update": "approve"
     },
     {
       "name": "claude-md-management",
@@ -380,7 +406,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Edits CLAUDE.md."
     },
     {
       "name": "code-review",
@@ -390,7 +417,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "A Claude command."
     },
     {
       "name": "code-simplifier",
@@ -400,7 +428,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "A Claude agent."
     },
     {
       "name": "context7",
@@ -410,7 +439,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Codex gets it from connections."
     },
     {
       "name": "feature-dev",
@@ -420,17 +450,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
-    },
-    {
-      "name": "frontend-design",
-      "claude": {
-        "marketplace": "anthropics/claude-plugins-official",
-        "plugin": "frontend-design@claude-plugins-official"
-      },
-      "codex": null,
-      "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Claude commands and agents."
     },
     {
       "name": "superpowers",
@@ -438,19 +459,12 @@
         "marketplace": "anthropics/claude-plugins-official",
         "plugin": "superpowers@claude-plugins-official"
       },
-      "codex": null,
-      "scope": "core",
-      "update": "auto"
-    },
-    {
-      "name": "revenuecat",
-      "claude": {
-        "marketplace": "anthropics/claude-plugins-official",
-        "plugin": "revenuecat@claude-plugins-official"
+      "codex": {
+        "marketplace": "obra/superpowers",
+        "plugin": "superpowers@superpowers-dev"
       },
-      "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "approve"
     },
     {
       "name": "clangd-lsp",
@@ -460,7 +474,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Claude language server."
     },
     {
       "name": "swift-lsp",
@@ -470,7 +485,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Claude language server."
     },
     {
       "name": "typescript-lsp",
@@ -480,7 +496,8 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Claude language server."
     },
     {
       "name": "ralph-loop",
@@ -490,20 +507,62 @@
       },
       "codex": null,
       "scope": "core",
-      "update": "auto"
+      "update": "auto",
+      "claudeOnly": "Claude commands and hooks."
+    }
+  ],
+  "connections": [
+    {
+      "name": "cloudflare",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "harnesses": [
+        "claude",
+        "codex"
+      ],
+      "scope": "core"
+    },
+    {
+      "name": "expo",
+      "url": "https://mcp.expo.dev/mcp",
+      "harnesses": [
+        "claude",
+        "codex"
+      ],
+      "scope": "core"
+    },
+    {
+      "name": "revenuecat",
+      "url": "https://mcp.revenuecat.ai/mcp",
+      "harnesses": [
+        "claude",
+        "codex"
+      ],
+      "scope": "core"
+    },
+    {
+      "name": "context7",
+      "url": "https://mcp.context7.com/mcp",
+      "harnesses": [
+        "codex"
+      ],
+      "scope": "core"
     }
   ],
   "dropped": {
     "skills": [
+      "ab-test-setup",
+      "analytics-tracking",
       "anatomy",
       "appllama-app-design-skill",
       "appllama-usage",
       "browser-use",
+      "competitor-alternatives",
       "herd",
       "herdr",
       "humanizer",
       "logging-standards",
       "nia",
+      "pricing-strategy",
       "sandbox-sdk"
     ],
     "skillPrefixes": [
@@ -515,7 +574,11 @@
       "cloudflare@cloudflare",
       "supabase@claude-plugins-official",
       "feature-dev@claude-code-plugins",
-      "frontend-design@claude-code-plugins"
+      "frontend-design@claude-code-plugins",
+      "anti-slop@justgetai-tools",
+      "marketing-copy@justgetai-tools",
+      "frontend-design@claude-plugins-official",
+      "revenuecat@claude-plugins-official"
     ]
   }
 }

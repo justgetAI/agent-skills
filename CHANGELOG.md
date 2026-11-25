@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 - `catalogue.json`: approved third-party skills and plugins by source, with scope and update policy. `scripts/check-catalogue.mjs` validates it.
+- `scripts/check-machine.mjs`: reports skills, plugins and connections missing from any Claude profile or Codex.
 
 ### Changed
 - `.agents/skills/{context-engineering,orchestrating-swarms,prompt-engineering}` are links to the plugin folders, replacing the copies.
