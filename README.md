@@ -96,6 +96,15 @@ Around the loop: `status` (where things stand), `audit` (document an existing co
 
 Install any of them with `npx skills add justgetAI/agent-skills --skill <name>`, or on Claude Code with `claude plugin install <name>@justgetai-tools`.
 
+## Catalogue
+
+[`catalogue.json`](./catalogue.json) lists the third-party skills and plugins we use. It links to their repos and copies nothing.
+
+- `scope`: `core` goes on every machine; `project` is installed per project.
+- `update`: `auto` may update unattended; `approve` waits for a person.
+- `skills` install with `npx skills`. `plugins` are for anything that also needs hooks, agents, commands or an MCP server.
+- `dropped` is removed wherever it is found.
+
 ## Upgrading
 
 | Host | Command |
