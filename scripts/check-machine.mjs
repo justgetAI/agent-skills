@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Reports what catalogue.json expects and this machine lacks, per Claude profile and Codex. Reads only.
+import { execFileSync } from "node:child_process"
 import { existsSync, lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs"
 import { homedir } from "node:os"
 import { join } from "node:path"
@@ -38,18 +39,15 @@ for (const d of profiles) {
   report(d, "dropped plugins on", c.dropped.plugins.filter(p => enabled[p]))
   const config = d === ".claude" ? join(home, ".claude.json") : join(home, d, ".claude.json")
   const servers = json(config).mcpServers ?? {}
-  report(d, "connections missing", c.connections.filter(m => m.harnesses.includes("claude") && servers[m.name]?.url !== m.url).map(m => m.name))
+  report(d, "connections missing", c.connections.filter(m => m.scope === "core" && m.harnesses.includes("claude") && servers[m.name]?.url !== m.url).map(m => m.name))
 }
 
-const codex = join(home, ".codex/config.toml")
-if (!existsSync(codex)) report("codex", "missing", ["no ~/.codex/config.toml"])
-else {
-  const toml = readFileSync(codex, "utf8")
-  const table = head => toml.split(/^(?=\[)/m).find(t => t.startsWith(head))
-  const on = p => /^enabled\s*=\s*true/m.test(table(`[plugins."${p}"]`) ?? "")
-  report("codex", "plugins missing", c.plugins.filter(p => p.scope === "core" && p.codex && !on(p.codex.plugin)).map(p => p.codex.plugin))
-  report("codex", "connections missing", c.connections.filter(m => m.harnesses.includes("codex") && !table(`[mcp_servers.${m.name}]`)?.includes(`"${m.url}"`)).map(m => m.name))
-}
+// Ask Codex rather than parse its config, so CODEX_HOME, TOML spelling and disabled entries are handled.
+const codex = (...args) => JSON.parse(execFileSync("codex", [...args, "--json"], { encoding: "utf8", maxBuffer: 1 << 26 }))
+const codexPlugins = codex("plugin", "list").installed.filter(p => p.installed && p.enabled).map(p => p.pluginId)
+const codexServers = codex("mcp", "list").filter(m => m.enabled)
+report("codex", "plugins missing", c.plugins.filter(p => p.scope === "core" && p.codex && !codexPlugins.includes(p.codex.plugin)).map(p => p.codex.plugin))
+report("codex", "connections missing", c.connections.filter(m => m.scope === "core" && m.harnesses.includes("codex") && !codexServers.some(s => s.name === m.name && s.transport.url === m.url)).map(m => m.name))
 
 console.log(problems ? `${problems} problems` : "ok")
 process.exit(problems ? 1 : 0)

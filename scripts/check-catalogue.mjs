@@ -65,7 +65,7 @@ if (process.argv.includes("--online")) {
       for (const p of [...paths].sort((a, b) => likely(b) - likely(a))) {
         if (!missing.size) break
         const text = execFileSync("gh", ["api", `repos/${s.source}/contents/${p}`, "-H", "Accept: application/vnd.github.raw"], { encoding: "utf8" })
-        missing.delete(text.match(/^name:\s*["']?([a-z0-9-]+)/m)?.[1])
+        missing.delete(text.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1].match(/^name:\s*["']?([a-z0-9-]+)/m)?.[1])
       }
       for (const n of missing) check(false, `${s.source} has no skill named ${n}`)
     } catch (e) {
